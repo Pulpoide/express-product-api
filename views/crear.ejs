@@ -1,0 +1,51 @@
+<%- include("template/header", {tituloWeb: 'Agregar producto'}) %>
+</head>
+<body>
+    <div class="container">
+        <h1>Agregar Producto:</h1>
+         <form action="/api/1.0/products/create" method="POST">
+            <input
+            type="text"
+            placeholder="Nombre"
+            class="form-control my-2"
+            name="nombre"
+            >
+            <input
+            type="text"
+            placeholder="Descripcion"
+            class="form-control my-2"
+            name="descripcion"
+            >
+            <input
+            type="text"
+            placeholder="Precio"
+            class="form-control my-2"
+            name="precio"
+            >
+            <input
+            type="text"
+            placeholder="Marca"
+            class="form-control my-2"
+            name="marca"
+            >
+            <input
+            type="text"
+            placeholder="Stock"
+            class="form-control my-2"
+            name="stock"
+            >
+            <input
+            type="file"
+            placeholder="Imagen"
+            class="form-control my-2"
+            name="img"
+            >
+            <button class="btn btn-success block" type="submit">Agregar</button>
+         </form>
+    </div>
+
+
+
+
+</body>
+</html>
