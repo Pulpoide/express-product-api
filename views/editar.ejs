@@ -1,61 +1,74 @@
-<%- include("template/header", {tituloWeb: 'Agregar producto'}) %>
+<%- include("template/header", {tituloWeb: 'Editar producto'}) %>
 </head>
 <body>
     <div class="container">
-        <h1>Agregar Producto:</h1>
-         <form id="formEditar">
+        <h1>Editar Producto <%= producto.codigo %>:</h1>
+         <form id="formEditar" data-code="<%= producto.codigo %>">
             <input
             type="text"
             placeholder="Nombre"
             class="form-control my-2"
             name="nombre"
-            required
+            value="<%= producto.nombre %>"
+            id="nombreInput"
+            
             >
             <input
             type="text"
             placeholder="Descripcion"
             class="form-control my-2"
             name="descripcion"
-            required
+            value="<%= producto.descripcion %>"
+            id="descripcionInput"
             >
             <input
-            type="number"
+            type="text"
             placeholder="Precio"
             class="form-control my-2"
             name="precio"
-            required
+            value="<%= producto.precio %>"
+            id="precioInput"
             >
             <input
             type="text"
             placeholder="Marca"
             class="form-control my-2"
             name="marca"
-            required
+            value="<%= producto.marca %>"
+            id="marcaInput"
             >
             <input
-            type="number"
+            type="text"
             placeholder="Stock"
             class="form-control my-2"
             name="stock"
-            required
+            value="<%= producto.stock %>"
+            id="stockInput"
             >
             <input
             type="file"
             placeholder="Imagen"
             class="form-control my-2"
             name="img"
+            value="<%= producto.img %>"
+            id="imgInput"
             >
             
-            <input  class="btn btn-success btn-lg w-100" type="submit" role="button"/> 
-
+            <button  class="btn btn-success btn-block" type="submit" >Editar</button>
          </form>
+
+
+
          <a href="http://localhost:8888/productos">
-            <button class="btn btn-dark btn-lg my-2 w-100">Volver</button>
+            <button class="btn btn-dark my-2">Volver</button>
         </a>
     </div>
+
+
+
+
 </body>
 </html>
-
 
 <script>
     const formEditar = document.querySelector('#formEditar')
@@ -63,6 +76,7 @@
     formEditar.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const codigo = formEditar.dataset.code;
         const nombre = formEditar.elements['nombre'].value;
         const descripcion = formEditar.elements['descripcion'].value;
         const precio = formEditar.elements['precio'].value;
@@ -71,14 +85,14 @@
         const img = formEditar.elements['img'].value;
 
         try{
-            const data = await fetch(`http://localhost:8888/api/1.0/products/create`, { 
-                method: 'post',
+            const data = await fetch(`http://localhost:8888/api/1.0/products/${codigo}`, { 
+                method: 'put',
                 headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({nombre, descripcion, precio, marca, stock,img})
         })
         const res = await data.json();
         if(res){
-            window.location.href = `/productos`
+            window.location.href = `/productos/${codigo}`
         }
 
         }catch(error){

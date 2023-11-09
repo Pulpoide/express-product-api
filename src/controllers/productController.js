@@ -1,10 +1,10 @@
 const fs = require('fs');
 const db = require('../database/db')
-const Producto = require('../models/producto')
+//const Producto = require('../models/producto')
 
 
 // Función para modificar el json al hacer peticiones GET de productos con imagenes.
-const productosConNombreImagen = (productos) => productos.map(producto => {
+const productosConNombreImagen = (productos) => productos?.map(producto => {
     if(producto.img) {
         const imgName = producto.codigo + '-img';
         return {...producto, img: imgName}
@@ -21,7 +21,7 @@ const getAllProducts = async (req, res) => {
     try {
         const [rows] = await db.dataBase.query(sqlQuery);
         const productos = rows;
-        res.json([{ status: "OK", products: productosConNombreImagen(productos) }]);        
+        res.json({ status: "OK", products: productosConNombreImagen(productos) });        
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
@@ -39,7 +39,7 @@ const getProduct = async (req, res) => {
             return res.status(404).json({ message: `Producto código: ${code} no encontrado :(` });
         }
         
-        res.json([{ status: "OK", products: productosConNombreImagen(productos) }]);        
+        res.json({ status: "OK", products: productosConNombreImagen(productos) });        
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
@@ -53,20 +53,17 @@ const createNewProduct = async (req, res) => {
     let precio = req.body.precio;
     let marca = req.body.marca;
     let stock = req.body.stock;
-    let img = null;
-
-    // relacionado a la vista
-    // const body = req.body;
-    // const producto = new Producto(body)
-    // console.log(producto)
+    let img = req.body.img;
 
     const values = [nombre, descripcion, precio, marca, stock, img];
     const sqlQuery = 'INSERT INTO productos (nombre, descripcion, precio, marca, stock, img) VALUES (?, ?, ?, ?, ?, ?)';
 
     try {
         const [row] = await db.dataBase.query(sqlQuery, values);
-        res.send([{ status: "OK", message: "Producto agregado correctamente", product: { code: row.insertId, nombre, descripcion, precio, marca, stock, img } }]);
+        res.status(201);
+        res.json({ status: "OK", message: "Producto agregado correctamente", product: { code: row.insertId, nombre, descripcion, precio, marca, stock, img } });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: "Error interno" })
     }
 }
@@ -99,14 +96,14 @@ const deleteProduct = async (req, res) => {
         if (result.affectedRows <= 0) {
             return res.status(404).json({ message: 'No se pudo eliminar el producto' })
         }
-        console.log(result)
+        //console.log(result)
         res.json({ message: `Producto (${code}) eliminado correctamente` })
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
 }
 
-// Agregar img a producto
+// Agregar img a un producto
 const addImgProduct = async (req, res) => {
     let code = req.params.code;
     const imgData = fs.readFileSync(req.file.path) 
