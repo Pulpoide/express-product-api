@@ -3,7 +3,7 @@
 <body>
     <div class="container">
         <h1>Agregar Producto:</h1>
-         <form id="formEditar">
+         <form id="formCrear" method="post" action="http://localhost:8888/products/uploadImg" enctype="multipart/form-data">
             <input
             type="text"
             placeholder="Nombre"
@@ -58,28 +58,37 @@
 
 
 <script>
-    const formEditar = document.querySelector('#formEditar')
+    const formCrear = document.querySelector('#formCrear')
+    const input = document.querySelector('input[type="file"]')
 
-    formEditar.addEventListener('submit', async (e) => {
+    formCrear.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const nombre = formEditar.elements['nombre'].value;
-        const descripcion = formEditar.elements['descripcion'].value;
-        const precio = formEditar.elements['precio'].value;
-        const marca = formEditar.elements['marca'].value;
-        const stock = formEditar.elements['stock'].value;
-        const img = formEditar.elements['img'].value;
+        const nombre = formCrear.elements['nombre'].value;
+        const descripcion = formCrear.elements['descripcion'].value;
+        const precio = formCrear.elements['precio'].value;
+        const marca = formCrear.elements['marca'].value;
+        const stock = formCrear.elements['stock'].value;
+        const img = formCrear.elements['img'].value;
 
         try{
             const data = await fetch(`http://localhost:8888/api/1.0/products/create`, { 
                 method: 'post',
                 headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({nombre, descripcion, precio, marca, stock,img})
+            body: JSON.stringify({nombre, descripcion, precio, marca, stock, img})
+            
         })
         const res = await data.json();
         if(res){
-            window.location.href = `/productos`
+            //window.location.href = `/productos`  
         }
+
+        var formData = new FormData()
+        formData.append('file', input.files[0])
+        formData.append('user', 'hubot')
+        
+        const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData});
+
 
         }catch(error){
             console.log(error);

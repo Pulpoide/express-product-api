@@ -4,7 +4,8 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const productsRouter = require('./src/routes/productRoutes');
 const viewsController = require('./src/controllers/viewsController')
-const favicon = require('serve-favicon')
+//const multer = require('multer');
+//const favicon = require('serve-favicon')
 const app = express();
 const PORT = 8888;
 
@@ -16,7 +17,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(favicon(path.join(__dirname + '/public/favicon.ico')));
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Motor de plantilla
 app.set("view engine", "ejs");

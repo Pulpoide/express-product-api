@@ -7,7 +7,7 @@ const mostrarProductos = async (req, res) => {
         const response = await axios.get('http://localhost:8888/api/1.0/products/');
         const data = response.data;
 
-        res.render("productos", { productos: productController.productosConNombreImagen(data.products) })
+        res.render("productos", { productos: data.products })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Error interno' })
@@ -21,7 +21,7 @@ const mostrarProducto = async (req, res) => {
     try {
         const response = await axios.get(`http://localhost:8888/api/1.0/products/${code}`);
         const data = response.data;
-        res.render("detalle", { productos: productController.productosConNombreImagen(data.products) });
+        res.render("detalle", { productos: data.products });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Error interno" })

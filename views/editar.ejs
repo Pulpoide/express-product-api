@@ -71,7 +71,9 @@
 </html>
 
 <script>
+
     const formEditar = document.querySelector('#formEditar')
+    const input = document.querySelector('input[type="file"]')
 
     formEditar.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -94,6 +96,12 @@
         if(res){
             window.location.href = `/productos/${codigo}`
         }
+
+        var formData = new FormData()
+        formData.append('file', input.files[0])
+        formData.append('user', 'hubot')
+        
+        const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData});
 
         }catch(error){
             console.log(error);

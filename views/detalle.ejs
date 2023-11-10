@@ -22,7 +22,7 @@
                 <th scope="col">Precio</th>
                 <th scope="col">Marca</th>
                 <th scope="col">Stock</th>
-                <th scope="col">Imagen</th>
+                <!-- <th scope="col">Imagen</th> -->
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
@@ -39,7 +39,7 @@
                             <td>$<%= producto.precio %></td>
                             <td><%= producto.marca %></td>
                             <td><%= producto.stock %></td>
-                            <td><%= producto.img %></td>
+                            <!-- <td></td> -->
                             <td> 
                               <a href="/producto/editar/<%= producto.codigo %>" class="btn btn-warning btn-sm">
                                 Editar
@@ -49,17 +49,28 @@
                               </a>
                             </td>
                         </tr>
-
+                            
                     <% }) %>
                   <% } %>
 
-              
+                  
             </tbody>
           </table>
+          <br>
+          
 
           <a href="/productos"><button class="btn btn-dark">Volver</button></a>
 
-
+          <br>
+          <br>
+          <br>
+          <h3>Imagen:</h3>
+          <br>
+          <div class="d-flex align-items-center justify-content-center w-100">
+            <!--  producto.producto.img %> -->
+            <img src="http://localhost:8888/images/<%= productos[0].img %>">
+          
+          </div>
 
       
     </div>
@@ -81,7 +92,7 @@
         
         try{
         const data = await fetch(`http://localhost:8888/api/1.0/products/${codigo}`, { method: 'delete'})
-        
+      
 
         }catch(error){
             console.log(error)

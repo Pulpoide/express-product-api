@@ -1,8 +1,6 @@
 const fs = require('fs');
 const db = require('../database/db')
-//const Producto = require('../models/producto')
-
-
+const upload = require('./upload')
 // Función para modificar el json al hacer peticiones GET de productos con imagenes.
 const productosConNombreImagen = (productos) => productos?.map(producto => {
     if(producto.img) {
@@ -57,7 +55,6 @@ const createNewProduct = async (req, res) => {
 
     const values = [nombre, descripcion, precio, marca, stock, img];
     const sqlQuery = 'INSERT INTO productos (nombre, descripcion, precio, marca, stock, img) VALUES (?, ?, ?, ?, ?, ?)';
-
     try {
         const [row] = await db.dataBase.query(sqlQuery, values);
         res.status(201);
@@ -106,12 +103,13 @@ const deleteProduct = async (req, res) => {
 // Agregar img a un producto
 const addImgProduct = async (req, res) => {
     let code = req.params.code;
-    const imgData = fs.readFileSync(req.file.path) 
+    //const img = fs.readFileSync(req.file.path) 
     const sqlQuery = 'UPDATE productos SET img= IFNULL(?, img)  WHERE codigo=?';
 
     try {
-        await db.dataBase.query(sqlQuery, [imgData, code])
-        res.json({message: `Imagen cargada correctamente a Producto ${code}`})
+        //await db.dataBase.query(sqlQuery, [img, code])
+       // res.json({message: `Imagen cargada correctamente a Producto ${code}`})
+       res.json({message: "Img cargada"})
 
     }catch (error){
         console.log(error)
