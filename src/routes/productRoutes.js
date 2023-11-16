@@ -17,7 +17,7 @@ router
     .put("/products/update/:code", productController.updateProduct)
 
     // Para cargar la imagen a la carpeta local
-    .post("/products/uploadImg", uploadImg.upload, productController.addImgProduct)
+    .post("/products/uploadImg", uploadImg.upload)
 
     // Elimina un producto
     .delete("/products/delete/:code", productController.deleteProduct);

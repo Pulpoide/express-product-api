@@ -19,8 +19,8 @@ const getProduct = async (req, res) => {
     const sqlQuery = 'SELECT * FROM productos WHERE codigo=?';
 
     try {
-        const [rows] = await db.dataBase.query(sqlQuery, code);
-        const productos = rows;
+        const rows = await db.dataBase.query(sqlQuery, code);
+        const productos = rows[0];
         if (rows.length <= 0) {
             return res.status(404).json({ message: `Producto código: ${code} no encontrado :(` });
         }
@@ -86,22 +86,10 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-// Agregar img a un producto
-const addImgProduct = async (req, res) => {
-
-    try {
-        res.json({ message: "Img cargada exitosamente" })
-    } catch (error) {
-        return res.status(500).json({ message: "Error interno" })
-    }
-}
-
-
 module.exports = {
     getAllProducts,
     getProduct,
     createNewProduct,
     updateProduct,
-    deleteProduct,
-    addImgProduct
+    deleteProduct
 };

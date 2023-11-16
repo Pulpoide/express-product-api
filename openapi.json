@@ -196,32 +196,13 @@
         },
         "responses": {
           "200": {
-            "description": "(OK) La imagen se cargó exitosamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "(OK) La imagen se cargó exitosamente"
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
           "404": {
-            "description": "(NotFound) no se encontró la información",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundProducto"
-                }
-              }
-            }
+            "description": "(NotFound) no se encontró la información"
           },
           "500": {
             "$ref": "#/components/responses/ServerError"
