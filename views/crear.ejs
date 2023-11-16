@@ -1,99 +1,68 @@
-<%- include("template/header", {tituloWeb: 'Agregar producto'}) %>
-</head>
-<body>
-    <div class="container">
-        <h1>Agregar Producto:</h1>
-         <form id="formCrear" method="post" action="http://localhost:8888/products/uploadImg" enctype="multipart/form-data">
-            <input
-            type="text"
-            placeholder="Nombre"
-            class="form-control my-2"
-            name="nombre"
-            required
-            >
-            <input
-            type="text"
-            placeholder="Descripcion"
-            class="form-control my-2"
-            name="descripcion"
-            required
-            >
-            <input
-            type="number"
-            placeholder="Precio"
-            class="form-control my-2"
-            name="precio"
-            required
-            >
-            <input
-            type="text"
-            placeholder="Marca"
-            class="form-control my-2"
-            name="marca"
-            required
-            >
-            <input
-            type="number"
-            placeholder="Stock"
-            class="form-control my-2"
-            name="stock"
-            required
-            >
-            <input
-            type="file"
-            placeholder="Imagen"
-            class="form-control my-2"
-            name="img"
-            >
-            
-            <input  class="btn btn-success btn-lg w-100" type="submit" role="button"/> 
+<%- include("template/header", {tituloWeb: 'Agregar producto' }) %>
+    </head>
 
-         </form>
-         <a href="http://localhost:8888/productos">
-            <button class="btn btn-dark btn-lg my-2 w-100">Volver</button>
-        </a>
-    </div>
-</body>
-</html>
+    <body>
+        <br>
+        <div class="container">
+            <h1>Agregar Producto:</h1>
+            <form id="formCrear" method="post" action="http://localhost:8888/products/uploadImg"
+                enctype="multipart/form-data">
+                <input type="text" placeholder="Nombre" class="form-control my-2" name="nombre" required>
+                <input type="text" placeholder="Descripcion" class="form-control my-2" name="descripcion" required>
+                <input type="number" placeholder="Precio" class="form-control my-2" name="precio" required>
+                <input type="text" placeholder="Marca" class="form-control my-2" name="marca" required>
+                <input type="number" placeholder="Stock" class="form-control my-2" name="stock" required>
+                <input type="file" placeholder="Imagen" class="form-control my-2" name="img">
+
+                <input class="btn btn-success btn-lg w-100" type="submit" role="button" />
+
+            </form>
+            <a href="http://localhost:8888/productos">
+                <button class="btn btn-dark btn-lg my-2 w-100">Volver</button>
+            </a>
+        </div>
+    </body>
+
+    </html>
 
 
-<script>
-    const formCrear = document.querySelector('#formCrear')
-    const input = document.querySelector('input[type="file"]')
+    <script>
+        const formCrear = document.querySelector('#formCrear')
+        const input = document.querySelector('input[type="file"]')
 
-    formCrear.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        formCrear.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        const nombre = formCrear.elements['nombre'].value;
-        const descripcion = formCrear.elements['descripcion'].value;
-        const precio = formCrear.elements['precio'].value;
-        const marca = formCrear.elements['marca'].value;
-        const stock = formCrear.elements['stock'].value;
-        const img = formCrear.elements['img'].value;
+            const nombre = formCrear.elements['nombre'].value;
+            const descripcion = formCrear.elements['descripcion'].value;
+            const precio = formCrear.elements['precio'].value;
+            const marca = formCrear.elements['marca'].value;
+            const stock = formCrear.elements['stock'].value;
+            const img = formCrear.elements['img'].value.replace(/.*[\/\\]/, '');
 
-        try{
-            const data = await fetch(`http://localhost:8888/api/1.0/products/create`, { 
-                method: 'post',
-                headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({nombre, descripcion, precio, marca, stock, img})
-            
+            try {
+                const data = await fetch(`http://localhost:8888/api/1.0/products/create`, {
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, descripcion, precio, marca, stock, img })
+
+                })
+                const res = await data.json();
+                if (res) {
+                    window.location.href = `/productos`
+                }
+
+                var formData = new FormData()
+                formData.append('file', input.files[0])
+                formData.append('user', 'hubot')
+
+                const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData });
+
+
+            } catch (error) {
+                console.log(error);
+            }
+
         })
-        const res = await data.json();
-        if(res){
-            //window.location.href = `/productos`  
-        }
 
-        var formData = new FormData()
-        formData.append('file', input.files[0])
-        formData.append('user', 'hubot')
-        
-        const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData});
-
-
-        }catch(error){
-            console.log(error);
-        }
-
-    })
-
-</script>
+    </script>

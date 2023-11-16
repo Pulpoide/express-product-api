@@ -1,16 +1,4 @@
-const fs = require('fs');
 const db = require('../database/db')
-const upload = require('./upload')
-// Función para modificar el json al hacer peticiones GET de productos con imagenes.
-const productosConNombreImagen = (productos) => productos?.map(producto => {
-    if(producto.img) {
-        const imgName = producto.codigo + '-img';
-        return {...producto, img: imgName}
-    }else {
-    return producto;
-    }
-});
-
 
 // Obtener todos los registros de la tabla productos
 const getAllProducts = async (req, res) => {
@@ -19,7 +7,7 @@ const getAllProducts = async (req, res) => {
     try {
         const [rows] = await db.dataBase.query(sqlQuery);
         const productos = rows;
-        res.json({ status: "OK", products: productosConNombreImagen(productos) });        
+        res.json({ status: "OK", products: productos });
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
@@ -36,12 +24,11 @@ const getProduct = async (req, res) => {
         if (rows.length <= 0) {
             return res.status(404).json({ message: `Producto código: ${code} no encontrado :(` });
         }
-        
-        res.json({ status: "OK", products: productosConNombreImagen(productos) });        
+
+        res.json({ status: "OK", products: productos });
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
-
 };
 
 // Crear un nuevo registro
@@ -53,7 +40,7 @@ const createNewProduct = async (req, res) => {
     let stock = req.body.stock;
     let img = req.body.img;
 
-    const values = [nombre, descripcion, precio, marca, stock, img];
+    const values = [nombre, descripcion, precio, marca, stock, img.replace(/.*[\/\\]/, '')];
     const sqlQuery = 'INSERT INTO productos (nombre, descripcion, precio, marca, stock, img) VALUES (?, ?, ?, ?, ?, ?)';
     try {
         const [row] = await db.dataBase.query(sqlQuery, values);
@@ -72,7 +59,7 @@ const updateProduct = async (req, res) => {
     const sqlQuery = 'UPDATE productos SET nombre= IFNULL(?, nombre), descripcion= IFNULL(?, descripcion), precio= IFNULL(?, precio), marca= IFNULL(?, marca), stock= IFNULL(?, stock), img= IFNULL(?, img)  WHERE codigo=?';
 
     try {
-        const [result] = await db.dataBase.query(sqlQuery, [nombre, descripcion, precio, marca, stock, img, code]);
+        const [result] = await db.dataBase.query(sqlQuery, [nombre, descripcion, precio, marca, stock, img.replace(/.*[\/\\]/, ''), code]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Producto no encontrado' })
         }
@@ -93,7 +80,6 @@ const deleteProduct = async (req, res) => {
         if (result.affectedRows <= 0) {
             return res.status(404).json({ message: 'No se pudo eliminar el producto' })
         }
-        //console.log(result)
         res.json({ message: `Producto (${code}) eliminado correctamente` })
     } catch (error) {
         return res.status(500).json({ message: "Error interno" })
@@ -102,17 +88,10 @@ const deleteProduct = async (req, res) => {
 
 // Agregar img a un producto
 const addImgProduct = async (req, res) => {
-    let code = req.params.code;
-    //const img = fs.readFileSync(req.file.path) 
-    const sqlQuery = 'UPDATE productos SET img= IFNULL(?, img)  WHERE codigo=?';
 
     try {
-        //await db.dataBase.query(sqlQuery, [img, code])
-       // res.json({message: `Imagen cargada correctamente a Producto ${code}`})
-       res.json({message: "Img cargada"})
-
-    }catch (error){
-        console.log(error)
+        res.json({ message: "Img cargada exitosamente" })
+    } catch (error) {
         return res.status(500).json({ message: "Error interno" })
     }
 }
@@ -124,6 +103,5 @@ module.exports = {
     createNewProduct,
     updateProduct,
     deleteProduct,
-    addImgProduct,
-    productosConNombreImagen
+    addImgProduct
 };

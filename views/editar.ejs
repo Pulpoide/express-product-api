@@ -1,112 +1,78 @@
-<%- include("template/header", {tituloWeb: 'Editar producto'}) %>
-</head>
-<body>
-    <div class="container">
-        <h1>Editar Producto <%= producto.codigo %>:</h1>
-         <form id="formEditar" data-code="<%= producto.codigo %>">
-            <input
-            type="text"
-            placeholder="Nombre"
-            class="form-control my-2"
-            name="nombre"
-            value="<%= producto.nombre %>"
-            id="nombreInput"
-            
-            >
-            <input
-            type="text"
-            placeholder="Descripcion"
-            class="form-control my-2"
-            name="descripcion"
-            value="<%= producto.descripcion %>"
-            id="descripcionInput"
-            >
-            <input
-            type="text"
-            placeholder="Precio"
-            class="form-control my-2"
-            name="precio"
-            value="<%= producto.precio %>"
-            id="precioInput"
-            >
-            <input
-            type="text"
-            placeholder="Marca"
-            class="form-control my-2"
-            name="marca"
-            value="<%= producto.marca %>"
-            id="marcaInput"
-            >
-            <input
-            type="text"
-            placeholder="Stock"
-            class="form-control my-2"
-            name="stock"
-            value="<%= producto.stock %>"
-            id="stockInput"
-            >
-            <input
-            type="file"
-            placeholder="Imagen"
-            class="form-control my-2"
-            name="img"
-            value="<%= producto.img %>"
-            id="imgInput"
-            >
-            
-            <button  class="btn btn-success btn-block" type="submit" >Editar</button>
-         </form>
+<%- include("template/header", {tituloWeb: 'Editar producto' }) %>
+    </head>
+
+    <body>
+        <br>
+        <div class="container">
+            <h1>Editar Producto <%= producto.codigo %>:</h1>
+            <form id="formEditar" data-code="<%= producto.codigo %>">
+                <input type="text" placeholder="Nombre" class="form-control my-2" name="nombre"
+                    value="<%= producto.nombre %>" id="nombreInput">
+                <input type="text" placeholder="Descripcion" class="form-control my-2" name="descripcion"
+                    value="<%= producto.descripcion %>" id="descripcionInput">
+                <input type="text" placeholder="Precio" class="form-control my-2" name="precio"
+                    value="<%= producto.precio %>" id="precioInput">
+                <input type="text" placeholder="Marca" class="form-control my-2" name="marca"
+                    value="<%= producto.marca %>" id="marcaInput">
+                <input type="text" placeholder="Stock" class="form-control my-2" name="stock"
+                    value="<%= producto.stock %>" id="stockInput">
+                <input type="file" placeholder="Imagen" class="form-control my-2" name="img" value="<%= producto.img %>"
+                    id="imgInput">
+
+                <button class="btn btn-success btn-block w-100" type="submit">Editar</button>
+            </form>
 
 
 
-         <a href="http://localhost:8888/productos">
-            <button class="btn btn-dark my-2">Volver</button>
-        </a>
-    </div>
+            <a href="http://localhost:8888/productos/<%= producto.codigo %>">
+                <button class="btn btn-dark my-2 w-100">Volver</button>
+            </a>
+        </div>
 
 
 
 
-</body>
-</html>
+    </body>
 
-<script>
+    </html>
 
-    const formEditar = document.querySelector('#formEditar')
-    const input = document.querySelector('input[type="file"]')
+    <script>
 
-    formEditar.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        const formEditar = document.querySelector('#formEditar')
+        const input = document.querySelector('input[type="file"]')
 
-        const codigo = formEditar.dataset.code;
-        const nombre = formEditar.elements['nombre'].value;
-        const descripcion = formEditar.elements['descripcion'].value;
-        const precio = formEditar.elements['precio'].value;
-        const marca = formEditar.elements['marca'].value;
-        const stock = formEditar.elements['stock'].value;
-        const img = formEditar.elements['img'].value;
+        formEditar.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        try{
-            const data = await fetch(`http://localhost:8888/api/1.0/products/${codigo}`, { 
-                method: 'put',
-                headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify({nombre, descripcion, precio, marca, stock,img})
+            const codigo = formEditar.dataset.code;
+            const nombre = formEditar.elements['nombre'].value;
+            const descripcion = formEditar.elements['descripcion'].value;
+            const precio = formEditar.elements['precio'].value;
+            const marca = formEditar.elements['marca'].value;
+            const stock = formEditar.elements['stock'].value;
+            const img = formEditar.elements['img'].value.replace(/.*[\/\\]/, '');
+
+            try {
+                const data = await fetch(`http://localhost:8888/api/1.0/products/update/${codigo}`, {
+                    method: 'put',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, descripcion, precio, marca, stock, img })
+                })
+                const res = await data.json();
+                if (res) {
+                    window.location.href = `/productos/${codigo}`
+                }
+
+
+                // SUBIR LA IMAGEN PEGA AL POST /uploadImg
+                var formData = new FormData()
+                formData.append('file', input.files[0])
+
+                const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData });
+            } catch (error) {
+                console.log(error);
+            }
+
         })
-        const res = await data.json();
-        if(res){
-            window.location.href = `/productos/${codigo}`
-        }
 
-        var formData = new FormData()
-        formData.append('file', input.files[0])
-        formData.append('user', 'hubot')
-        
-        const resImg = await fetch(`http://localhost:8888/api/1.0/products/uploadImg`, { method: 'post', body: formData});
-
-        }catch(error){
-            console.log(error);
-        }
-
-    })
-
-</script>
+    </script>

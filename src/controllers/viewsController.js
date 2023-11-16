@@ -1,5 +1,3 @@
-const db = require('../database/db')
-const productController = require('../controllers/productController')
 const axios = require('axios')
 
 const mostrarProductos = async (req, res) => {
@@ -14,7 +12,6 @@ const mostrarProductos = async (req, res) => {
     }
 }
 
-
 const mostrarProducto = async (req, res) => {
     let code = req.params.code;
 
@@ -27,7 +24,6 @@ const mostrarProducto = async (req, res) => {
         return res.status(500).json({ message: "Error interno" })
     }
 }
-
 
 const crearProducto = async (req, res) => {
     try {

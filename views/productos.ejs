@@ -1,15 +1,23 @@
 <%- include("template/header", {tituloWeb: 'Productos' }) %>
   </head>
 
-  <body>
-    <br>
-    <div class="container">
-      <h1 class="display-2">CRUD Productos</h1>
+  <body style="background-color: black;">
+
+    <video src="http://localhost:8888/video/background.mp4" autoplay loop playsinline muted
+      style="object-fit: cover; width: 100vw; height:100vh; position: fixed; left: 0;">
+    </video>
+    <div class="container " style="position: relative; height: 150px; margin-top: 3%;">
+      <h1 class="display-2" style="color: white;">CRUD Productos</h1>
+      <br>
+
+      <a type="button" class="btn btn-success btn-lg w-100" href="/producto/crear" role="button">
+        Agregar Producto
+      </a>
       <br>
       <br>
 
       <table class="table table-hover">
-        <thead>
+        <thead class="thead-dark">
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
@@ -17,8 +25,7 @@
             <th scope="col">Precio</th>
             <th scope="col">Marca</th>
             <th scope="col">Stock</th>
-            <th scope="col">Imagen</th>
-            <th scope="col">Acción</th>
+            <th scope="col">Visualizar</th>
           </tr>
         </thead>
 
@@ -46,11 +53,8 @@
                   <%= producto.stock %>
                 </td>
                 <td>
-                  <%= producto.img %>
-                </td>
-                <td>
-                  <a href="/productos/<%= producto.codigo %>" class="btn btn-warning btn-sm">
-                    Editar
+                  <a href="/productos/<%= producto.codigo %>" class="btn btn-outline-dark">
+                    Info
                   </a>
                 </td>
               </tr>
@@ -61,19 +65,7 @@
 
         </tbody>
       </table>
-
-      
-      <a type="button" class="btn btn-success btn-lg w-100" href="/producto/crear" role="button">
-        Agregar Producto
-      </a>
       <br>
-      <br>
-
-
-
-
-
-
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

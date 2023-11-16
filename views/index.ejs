@@ -1,15 +1,26 @@
-<%- include("template/header", {tituloWeb: 'Home'}) %>
-</head>
-<body>
-    <div class="container">
-            <br>
-        <h1 class="display-2">Bienvenidos a mi API de Productos</h1>
-        <br>
-        <br>
-        <div class="d-flex justify-content-center">
-            <a class="btn btn-dark btn-lg btn-block" href="http://localhost:8888/productos" role="button">Mostrar Productos</a>
+<%- include("template/header", {tituloWeb: 'Home' }) %>
+    </head>
+
+    <body>
+        <video src="http://localhost:8888/video/background.mp4" autoplay loop playsinline muted
+            style="object-fit: cover; width: 100vw; height:100vh; position: fixed; left: 0;">
+        </video>
+
+        <div class="container" style="position: relative; height: 150px; margin-top: 10%;">
+
+            <div class="d-flex justify-content-center">
+                <div class="container-lg align-items-center" style="justify-content: center;">
+                    <h1 class="display-2" style="text-align: center; color: #ffffff; margin-bottom: 150px;">Bienvenido a
+                        mi API de Productos</h1>
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="http://localhost:8888/productos"><button class="btn btn-outline-warning btn-lg"
+                                style="width: 300px;">Productos</button> </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    
-</body>
-</html>
+
+    </body>
+
+    </html>

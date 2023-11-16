@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const uploadImg = require('../controllers/upload')
 const productController = require('../controllers/productController')
 
@@ -14,13 +13,13 @@ router
     // Crea un producto
     .post("/products/create", productController.createNewProduct)
 
-    // Para subir imagenes
+    // Actualiza un producto
+    .put("/products/update/:code", productController.updateProduct)
+
+    // Para cargar la imagen a la carpeta local
     .post("/products/uploadImg", uploadImg.upload, productController.addImgProduct)
 
-    // Actualiza un producto
-    .put("/products/:code", productController.updateProduct)
-
     // Elimina un producto
-    .delete("/products/:code", productController.deleteProduct);
+    .delete("/products/delete/:code", productController.deleteProduct);
 
 module.exports = router;
