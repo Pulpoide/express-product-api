@@ -59,4 +59,4 @@ node index.js
 
 ## Autor
 [**Joaquin D. Olivero**](https://github.com/Pulpoide)
-[LinkedIn](https://www.linkedin.com/in/joaqu%C3%ADn-olivero-619354228/)
+[LinkedIn](https://www.linkedin.com/in/JoaquinOlivero)
