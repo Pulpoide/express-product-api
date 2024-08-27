@@ -24,7 +24,7 @@ API Products es una aplicación backend diseñada para gestionar un CRUD (Crear,
 ## Estructura del Proyecto
 
 ```bash
-/api/1.0 
+aoi2_w2
 ├── index.js 
 ├── src
 │ ├── controllers 
