@@ -23,6 +23,7 @@ API Products es una aplicación backend diseñada para gestionar un CRUD (Crear,
 
 ## Estructura del Proyecto
 
+```bash
 /api/1.0 
 ├── index.js 
 ├── src
@@ -45,6 +46,7 @@ API Products es una aplicación backend diseñada para gestionar un CRUD (Crear,
 │ ├── images 
 │ ├── video 
 │ └── favicon.ico
+```
 
 ## Instalación y Uso
 
@@ -53,9 +55,8 @@ git clone https://github.com/Pulpoide/aoi2_w2.git
 cd aoi2_w2
 npm install
 node index.js
-
+```
 
 ## Autor
-
-**Joaquin D. Olivero**
-
+[**Joaquin D. Olivero**](https://github.com/Pulpoide)
+[LinkedIn](https://www.linkedin.com/in/joaqu%C3%ADn-olivero-619354228/)
