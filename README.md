@@ -58,5 +58,5 @@ node index.js
 ```
 
 ## Autor
-[**Joaquin D. Olivero**](https://github.com/Pulpoide)
+[**Joaquin D. Olivero**](https://github.com/Pulpoide) -> 
 [LinkedIn](https://www.linkedin.com/in/JoaquinOlivero)
