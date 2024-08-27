@@ -22,28 +22,8 @@ API Products es una aplicación backend diseñada para gestionar un CRUD (Crear,
 - **Serve-favicon:** Middleware para servir un favicon.
 
 ## Estructura del Proyecto
-/api/1.0
-├── index.js
-├── src
-     └── controllers
-          └── productController.js
-	  └── upload.js
-          └── viewsController.js
-     └── database
-	  └── db.js
-     └── routes
-	  └── productRoutes.js
-├── views
-     └── template
-     └── crear.ejs
-     └── detalle.ejs
-     └── editar.ejs
-     └── index.ejs
-     └── productos.ejs
-├── public
-     └── images
-     └── video
-     └── favicon.ico
+
+/api/1.0 ├── index.js ├── src │ ├── controllers │ │ ├── productController.js │ │ ├── upload.js │ │ └── viewsController.js │ ├── database │ │ └── db.js │ ├── routes │ │ └── productRoutes.js ├── views │ ├── template │ ├── crear.ejs │ ├── detalle.ejs │ ├── editar.ejs │ ├── index.ejs │ └── productos.ejs ├── public │ ├── images │ ├── video │ └── favicon.ico
 
 ## Instalación y Uso
 
