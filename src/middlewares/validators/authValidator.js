@@ -9,7 +9,7 @@ module.exports = {
             .normalizeEmail(),
         body('password')
             .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
-            .matches(/^(?=.*\d)(?=.*[a-zA-Z])/).withMessage('Debe contener al menos un número y una letra'),
+            .matches(/^(?=.*\d)(?=.*[a-zA-Z])/).withMessage('La contraseña debe contener al menos un número y una letra'),
         body('confirmPassword')
             .custom((value, { req }) => value === req.body.password)
             .withMessage('Las contraseñas no coinciden'),
@@ -43,7 +43,7 @@ module.exports = {
                   const tiempoRestante = Math.ceil((60000 - tiempoTranscurrido) / 1000);
                   
                   if (tiempoRestante > 0) {
-                    throw new Error(`Espere ${tiempoRestante} segundos para nuevo código`);
+                    throw new Error(`Espere ${tiempoRestante} segundos para reenviar el código`);
                   }
                 }
                 return true;

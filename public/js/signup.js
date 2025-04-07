@@ -1,6 +1,14 @@
 document.getElementById('sendCode').addEventListener('click', async () => {
   const email = document.getElementById('email').value;
+  const errorElement = document.getElementById('errorMessage');
+  const successElement = document.getElementById('successMessage');
 
+  errorElement.style.display = 'none';
+  successElement.style.display = 'none';
+
+  const sendCodeButton = document.getElementById('sendCode');
+  sendCodeButton.disabled = true;
+  sendCodeButton.textContent = 'Enviando...';
 
   try {
     const response = await fetch('/api/auth/send-code', {
@@ -12,13 +20,19 @@ document.getElementById('sendCode').addEventListener('click', async () => {
     const data = await response.json();
 
     if (response.ok) {
-      alert('Código enviado, revisa tu correo.');
+      successElement.textContent = 'Código enviado, revisa tu correo electrónico';
+      successElement.style.display = 'block';
     } else {
-      alert(data.error || 'Error al enviar código');
+      errorElement.textContent = data.errors || 'Error al enviar código';
+      errorElement.style.display = 'block';
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('No se pudo conectar al servidor');
+    errorElement.textContent = 'No se pudo conectar al servidor';
+    errorElement.style.display = 'block';
+  } finally {
+    sendCodeButton.disabled = false;
+    sendCodeButton.textContent = 'Enviar código';
   }
 });
 
@@ -49,11 +63,9 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
       })
     });
 
-    console.log('Respuesta del servidor:', response);
-
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.error);
+    if (!response.ok) throw new Error(data.errors || data.message || 'Error desconocido');
 
     window.location.replace('/products');
 
