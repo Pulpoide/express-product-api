@@ -1,2 +1,13 @@
-# Ignora archivo .env
+# Dependencias
+node_modules/
+
+# Variables de entorno
 .env
+.env.local
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
