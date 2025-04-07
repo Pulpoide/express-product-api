@@ -1,396 +1,790 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.0",
   "info": {
-    "title": "API Productos",
-    "description": "Esta API se encarga de manipular información sobre productos",
-    "version": "1.0.0"
+    "title": "API de Productos",
+    "version": "1.0.0",
+    "description": "API REST para gestionar productos en el inventario."
   },
   "servers": [
     {
-      "url": "http://localhost:8888"
-    }
-  ],
-  "tags": [
-    {
-      "name": "Productos",
-      "description": "Estos endpoints manejan la información de los productos"
+      "url": "http://localhost:8888/api",
+      "description": "Servidor local"
     }
   ],
   "paths": {
-    "/api/1.0/products/create": {
+    "/auth/signin": {
       "post": {
-        "summary": "Agregar un nuevo producto a la BD",
+        "summary": "Autenticar usuario",
         "tags": [
-          "Productos"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BodyProductosPost"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "(OK) La información del producto se guardo correctamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExitoProductosPost"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/api/1.0/products/": {
-      "get": {
-        "summary": "Mostrar todos los productos de la BD",
-        "tags": [
-          "Productos"
-        ],
-        "responses": {
-          "200": {
-            "description": "(OK) La información del producto se guardo correctamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExitoProductosGet"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/api/1.0/products/{code}": {
-      "get": {
-        "summary": "Mostrar un único producto de la BD",
-        "tags": [
-          "Productos"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/code"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "(OK) La información del producto se guardo correctamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExitoProductosGet"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "description": "(NotFound) no se encontró la información",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundProducto"
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/api/1.0/products/update/{code}": {
-      "put": {
-        "summary": "Actualizar un producto de la BD",
-        "tags": [
-          "Productos"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/code"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BodyProductosPost"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "(OK) La información del producto se guardo correctamente",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExitoProductosGet"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "description": "(NotFound) no se encontró la información",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundProducto"
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/api/1.0/products/uploadImg": {
-      "post": {
-        "summary": "Agregar una imágen a la carpeta public",
-        "tags": [
-          "Productos"
+          "Autenticación"
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "file": {
+            "application/json": {
               "schema": {
-                "type": "string",
-                "format": "binary"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@ejemplo.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "micontraseña"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "(OK) La imagen se cargó exitosamente"
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "description": "(NotFound) no se encontró la información"
-          },
-          "500": {
-            "$ref": "#/components/responses/ServerError"
-          }
-        }
-      }
-    },
-    "/api/1.0/products/delete/{code}": {
-      "delete": {
-        "summary": "Eliminar un producto de la BD",
-        "tags": [
-          "Productos"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/code"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "(OK) La imagen se cargó exitosamente",
+            "description": "Login exitoso",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "token=abc123; Path=/; HttpOnly"
+                },
+                "description": "Cookie con JWT token"
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "success": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "redirect": {
+                      "type": "string",
+                      "example": "/products"
                     }
                   }
                 }
               }
             }
           },
-          "404": {
-            "description": "(NotFound) no se encontró el producto",
+          "401": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "summary": "Registrar nuevo usuario",
+        "tags": [
+          "Autenticación"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "nuevo@usuario.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "ContraseñaSegura123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "ContraseñaSegura123"
+                  },
+                  "verificationCode": {
+                    "type": "string",
+                    "length": 6,
+                    "example": "123456"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password",
+                  "confirmPassword",
+                  "verificationCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario registrado exitosamente",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "token=abc123; Path=/; HttpOnly; SameSite=Lax"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NotFoundProducto"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "507f1f77bcf86cd799439011"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "nuevo@usuario.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error en la solicitud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "error": {
+                          "type": "string",
+                          "enum": [
+                            "Contraseña no válida, debe tener al menos 8 caracteres y 1 número",
+                            "Las contraseñas no coinciden",
+                            "Código inválido o expirado",
+                            "El usuario ya existe"
+                          ]
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
           },
           "500": {
-            "$ref": "#/components/responses/ServerError"
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/send-code": {
+      "post": {
+        "summary": "Enviar código de verificación",
+        "tags": [
+          "Autenticación"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "usuario@ejemplo.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Código enviado exitosamente"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Obtener todos los productos",
+        "responses": {
+          "200": {
+            "description": "Listado de productos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "summary": "Crear un nuevo producto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Producto creado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "product": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Obtener un producto por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID del producto a obtener"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "product": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Producto no encontrado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "summary": "Actualizar un producto existente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Producto actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Producto no encontrado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error al actualizar el producto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "summary": "Eliminar un producto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto eliminado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Producto eliminado exitosamente"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Producto no encontrado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error al eliminar el producto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "Subir imagen al servidor",
+        "tags": [
+          "Archivos"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Archivo de imagen (JPEG, PNG, GIF)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Imagen subida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "filename": {
+                      "type": "string",
+                      "example": "123456789-hola.jpg"
+                    },
+                    "path": {
+                      "type": "string",
+                      "example": "/images/123456789-hola.jpg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "413": {
+            "description": "Archivo demasiado grande",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "El archivo excede el límite de 5MB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
     }
   },
   "components": {
-    "responses": {
-      "NotFound": {
-        "description": "(NotFound) no se encontró la información"
-      },
-      "BadRequest": {
-        "description": "(BadRequest) los datos enviados son incorrectos o hay datos obligatorios no enviados"
-      },
-      "ServerError": {
-        "description": "Error en el servidor"
-      }
-    },
-    "parameters": {
-      "code": {
-        "in": "path",
-        "name": "code",
-        "description": "Código del producto",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        }
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "token",
+        "description": "Autenticación mediante cookies JWT"
       }
     },
     "schemas": {
-      "BodyProductosPost": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "67b67e8d556235d2d03cd524"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Reloj Inteligente"
+          },
+          "descripcion": {
+            "type": "string",
+            "example": "Reloj con inteligencia artificial."
+          },
+          "precio": {
+            "type": "number",
+            "example": 1460000
+          },
+          "marca": {
+            "type": "string",
+            "example": "Xiaomi"
+          },
+          "stock": {
+            "type": "number",
+            "example": 55
+          },
+          "img": {
+            "type": "string",
+            "example": ""
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-02-20T00:59:57.417Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-03-24T15:10:03.293Z"
+          }
+        }
+      },
+      "ProductInput": {
         "type": "object",
         "properties": {
           "nombre": {
             "type": "string",
-            "description": "Nombre del producto"
+            "example": "Peluche"
           },
           "descripcion": {
             "type": "string",
-            "description": "Descripción del producto"
+            "example": "Peluche de osito."
           },
           "precio": {
-            "type": "integer",
-            "description": "Precio del producto"
+            "type": "number",
+            "example": 12000
           },
           "marca": {
             "type": "string",
-            "description": "Marca del producto"
+            "example": "Detoys"
           },
           "stock": {
-            "type": "integer",
-            "description": "Stock del producto"
-          },
-          "img": {
-            "type": "string",
-            "description": "Imagen del producto"
+            "type": "number",
+            "example": 500
           }
-        }
-      },
-      "ExitoProductosPost": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Bandera que nos indica si la llamada al servicio fue exitosa"
-          },
-          "message": {
-            "type": "string",
-            "description": "Mensaje de confirmación"
-          },
-          "product": {
-            "type": "object",
-            "description": "Descripción del producto agregado",
-            "properties": {
-              "code": {
-                "type": "integer"
-              },
-              "nombre": {
-                "type": "string"
-              },
-              "descripción": {
-                "type": "string"
-              },
-              "precio": {
-                "type": "integer"
-              },
-              "marca": {
-                "type": "string"
-              },
-              "stock": {
-                "type": "integer"
-              },
-              "img": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "ExitoProductosGet": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Bandera que nos indica si la llamada al servicio fue exitosa"
-          },
-          "products": {
-            "type": "array",
-            "items": {
+        },
+        "required": [
+          "nombre",
+          "descripcion",
+          "precio",
+          "marca",
+          "stock"
+        ]
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Token inválido o expirado",
+        "content": {
+          "application/json": {
+            "schema": {
               "type": "object",
-              "description": "Descripción del producto agregado",
               "properties": {
-                "codigo": {
-                  "type": "integer"
+                "status": {
+                  "type": "string",
+                  "example": "error"
                 },
-                "nombre": {
-                  "type": "string"
-                },
-                "descripcion": {
-                  "type": "string"
-                },
-                "precio": {
-                  "type": "integer"
-                },
-                "marca": {
-                  "type": "string"
-                },
-                "stock": {
-                  "type": "integer"
-                },
-                "img": {
-                  "type": "string"
+                "message": {
+                  "type": "string",
+                  "example": "No autorizado"
                 }
               }
             }
           }
         }
       },
-      "NotFoundProducto": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
+      "ForbiddenError": {
+        "description": "No tienes permisos para esta acción",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Acceso prohibido"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "description": "Solicitud incorrecta",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Datos inválidos"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Error interno del servidor",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal Server Error"
+                }
+              }
+            }
           }
         }
       }

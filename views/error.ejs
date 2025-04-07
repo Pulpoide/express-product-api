@@ -1,0 +1,11 @@
+<%- include("template/header", {tituloWeb: 'Error' }) %>
+
+<div class="container mt-5">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">¡Ocurrió un error!</h4>
+        <p><%= error %></p>
+    </div>
+    <a href="/products" class="btn btn-primary">Volver a productos</a>
+</div>
+
+<%- include("template/footer") %>

@@ -2,47 +2,64 @@ const axios = require('axios')
 
 const mostrarProductos = async (req, res) => {
     try {
-        const response = await axios.get('http://localhost:8888/api/1.0/products/');
+        const response = await axios.get('http://localhost:8888/api/products/', { withCredentials: true });
         const data = response.data;
 
-        res.render("productos", { productos: data.products })
+        res.render("products", { products: data.products });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: 'Error interno' })
+        console.error("⚠️ Error al mostrar los productos:", error)
+
+        if (error.response && error.response.status === 403) {
+            return res.redirect('/signin');
+        }
+
+        return res.status(500).json({ message: 'Error interno' });
     }
-}
+};
 
 const mostrarProducto = async (req, res) => {
-    let code = req.params.code;
-
     try {
-        const response = await axios.get(`http://localhost:8888/api/1.0/products/${code}`);
-        const data = response.data;
-        res.render("detalle", { productos: data.products });
+        const id = req.params.id;
+        const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+            headers: { Cookie: req.headers.cookie }
+        });
+
+        res.render("detail", { 
+            product: response.data.product,
+            defaultImage: '/images/default.jpg'
+        });
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "Error interno" })
+        if (error.response && error.response.status === 401) {
+            return res.redirect('/signin');
+        }
+        console.error("⚠️ Error al obtener el producto:", error);
+        return res.status(500).json({ message: "Error interno" });
     }
-}
+};
 
 const crearProducto = async (req, res) => {
     try {
-        res.render("crear")
+        res.render("create")
     } catch (error) {
-        console.log(error)
+        console.error("⚠️ Error al crear el producto:", error)
         return res.status(500).json({ message: "Error interno" })
     }
 }
 
 const editarProducto = async (req, res) => {
-    let code = req.params.code;
-
+    let id = req.params.id;
     try {
-        const response = await axios.get(`http://localhost:8888/api/1.0/products/${code}`);
-        const data = response.data;
-        res.render("editar", { producto: data.products[0] });
+        const cookie = req.headers.cookie;
+
+        const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+            headers: {
+                Cookie: cookie
+            }
+        }); const data = response.data;
+        console.log("DATITA", data);
+        res.render("edit", { product: data.product });
     } catch (error) {
-        console.log(error)
+        console.error("⚠️ Error al editar el producto:", error)
         return res.status(500).json({ message: "Error interno" })
     }
 }

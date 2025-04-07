@@ -1,95 +1,82 @@
-const db = require('../database/db')
+const Product = require('../models/product');
+const AppError = require('../utils/AppError');
+const responseService = require('../services/responseService');
 
-// Obtener todos los registros de la tabla productos
-const getAllProducts = async (req, res) => {
-    const sqlQuery = 'SELECT * FROM productos';
-
+const createProduct = async (req, res, next) => {
     try {
-        const [rows] = await db.dataBase.query(sqlQuery);
-        const productos = rows;
-        res.json({ status: "OK", products: productos });
+        const product = await Product.create(req.body);
+        res.status(201).json({
+            status: "OK",
+            message: "Producto creado exitosamente",
+            product
+        });
     } catch (error) {
-        return res.status(500).json({ message: "Error interno" })
+        next(new AppError('Error al crear el producto', 500));
     }
 };
 
-// Obtener un único registro segun su codigo
-const getProduct = async (req, res) => {
-    let code = req.params.code;
-    const sqlQuery = 'SELECT * FROM productos WHERE codigo=?';
-
+const getAllProducts = async (req, res, next) => {
     try {
-        const rows = await db.dataBase.query(sqlQuery, code);
-        const productos = rows[0];
-        if (rows.length <= 0) {
-            return res.status(404).json({ message: `Producto código: ${code} no encontrado :(` });
-        }
+        const products = await Product.find({});
 
-        res.json({ status: "OK", products: productos });
+        return res.json({ products });
+        
     } catch (error) {
-        return res.status(500).json({ message: "Error interno" })
+        if (req.accepts('json')) {
+            return res.status(500).json({ error: error.message });
+        }
+        res.redirect('/signin');
     }
 };
 
-// Crear un nuevo registro
-const createNewProduct = async (req, res) => {
-    let nombre = req.body.nombre;
-    let descripcion = req.body.descripcion;
-    let precio = req.body.precio;
-    let marca = req.body.marca;
-    let stock = req.body.stock;
-    let img = req.body.img;
-
-    const values = [nombre, descripcion, precio, marca, stock, img.replace(/.*[\/\\]/, '')];
-    const sqlQuery = 'INSERT INTO productos (nombre, descripcion, precio, marca, stock, img) VALUES (?, ?, ?, ?, ?, ?)';
+const getProductById = async (req, res, next) => {
     try {
-        const [row] = await db.dataBase.query(sqlQuery, values);
-        res.status(201);
-        res.json({ status: "OK", message: "Producto agregado correctamente", product: { code: row.insertId, nombre, descripcion, precio, marca, stock, img } });
+        const product = await Product.findById(req.params.id)
+            .orFail(() => new AppError('Producto no encontrado', 404));
+
+        return res.json({ product });
+
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Error interno" })
-    }
-}
-
-// Actualizar completa o parcialmente un registro
-const updateProduct = async (req, res) => {
-    let code = req.params.code;
-    const { nombre, descripcion, precio, marca, stock, img } = req.body;
-    const sqlQuery = 'UPDATE productos SET nombre= IFNULL(?, nombre), descripcion= IFNULL(?, descripcion), precio= IFNULL(?, precio), marca= IFNULL(?, marca), stock= IFNULL(?, stock), img= IFNULL(?, img)  WHERE codigo=?';
-
-    try {
-        const [result] = await db.dataBase.query(sqlQuery, [nombre, descripcion, precio, marca, stock, img.replace(/.*[\/\\]/, ''), code]);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Producto no encontrado' })
+        if (error.message.includes('Producto no encontrado')) {
+            return res.status(404).render('error', { message: 'Producto no encontrado' });
         }
-        const [row] = await db.dataBase.query('select * from productos where codigo = ?', code)
-        res.json(row)
-    } catch (error) {
-        return res.status(500).json({ message: "Error interno" })
+        next(error);
     }
-}
+};
 
-// Eliminar un registro
-const deleteProduct = async (req, res) => {
-    let code = req.params.code;
-    const sqlQuery = 'DELETE from productos WHERE codigo=?';
+const updateProduct = async (req, res, next) => {
     try {
-        const [result] = await db.dataBase.query(sqlQuery, code);
-
-        if (result.affectedRows <= 0) {
-            return res.status(404).json({ message: 'No se pudo eliminar el producto' })
-        }
-        res.json({ message: `Producto (${code}) eliminado correctamente` })
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+        if (!product) return next(new AppError('Producto no encontrado', 404));
+        res.status(200).json({
+            status: "OK",
+            product
+        });
     } catch (error) {
-        return res.status(500).json({ message: "Error interno" })
+        next(new AppError('Error al actualizar el producto', 500));
     }
-}
+};
+
+const deleteProduct = async (req, res, next) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) return next(new AppError('Producto no encontrado', 404));
+        res.status(200).json({
+            status: "OK",
+            message: 'Producto eliminado correctamente'
+        });
+    } catch (error) {
+        next(new AppError('Error al eliminar el producto', 500));
+    }
+};
 
 module.exports = {
+    createProduct,
     getAllProducts,
-    getProduct,
-    createNewProduct,
+    getProductById,
     updateProduct,
     deleteProduct
 };

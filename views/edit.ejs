@@ -1,0 +1,35 @@
+<%- include("template/header", {tituloWeb: 'Editar producto' }) %>
+
+    <body>
+        <br>
+        <div class="container">
+            <h1>Editar Producto:</h1>
+            <form id="formEditar" data-code="<%= product._id %>">
+                <input type="text" placeholder="Nombre" class="form-control my-2" name="nombre"
+                    value="<%= product.nombre %>" id="nombreInput">
+                <input type="text" placeholder="Descripcion" class="form-control my-2" name="descripcion"
+                    value="<%= product.descripcion %>" id="descripcionInput">
+                <input type="text" placeholder="Precio" class="form-control my-2" name="precio"
+                    value="<%= product.precio %>" id="precioInput">
+                <input type="text" placeholder="Marca" class="form-control my-2" name="marca"
+                    value="<%= product.marca %>" id="marcaInput">
+                <input type="text" placeholder="Stock" class="form-control my-2" name="stock"
+                    value="<%= product.stock %>" id="stockInput">
+                <input type="file" placeholder="Imagen" class="form-control my-2" name="img" value="<%= product.img %>"
+                    id="imgInput">
+
+                <button class="btn btn-success btn-block w-100" type="submit">Guardar cambios</button>
+            </form>
+
+
+
+            <a href="/product/<%= product._id %>">
+                <button class="btn btn-danger my-2 w-100">Cancelar</button>
+            </a>
+        </div>
+    </body>
+
+    </html>
+
+
+    <script src="/js/editar.js"></script>
