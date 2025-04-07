@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -143,35 +144,54 @@ exports.sendVerificationCode = async (req, res) => {
 
 exports.postSignIn = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+      const { email, password } = req.body;
+      
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          throw {
+              isCustom: true,
+              status: 400,
+              message: errors.array().map(e => e.msg).join(', ')
+          };
+      }
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ status: "error", message: 'Datos inválidos' });
-    }
+      const user = await User.findOne({ email })
+          .select('+password')
+          .lean();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const validPassword = user 
+          ? await bcrypt.compare(password, user.password)
+          : await bcrypt.compare(password, '$2b$12$dummyhashdummyhashdummyha');
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 3600000
-    });
+      if (!user || !validPassword) {
+          throw {
+              isCustom: true,
+              status: 401,
+              message: 'Credenciales inválidas'
+          };
+      }
 
-    if (req.accepts('json')) {
-      return res.json({
-        success: true,
-        redirect: "/products"
+      const token = jwt.sign(
+          { userId: user._id }, 
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' }
+      );
+
+      res.cookie('token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 3600000
       });
-    }
 
-    res.redirect('/products');
+      res.status(200).json({
+          success: true,
+          userId: user._id,
+          email: user.email
+      });
+
   } catch (error) {
-    if (req.accepts('json')) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-    res.render('signin', { error: 'Credenciales inválidas' });
+      handleControllerError(res, error);
   }
 };
 

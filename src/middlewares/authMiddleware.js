@@ -16,9 +16,9 @@ const authenticateToken = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId).select('+active');
+        const user = await User.findById(decoded.userId);
         
-        if (!user || !user.active) {
+        if (!user || !user.isVerified) {
             res.clearCookie('token', {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production'
