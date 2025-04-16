@@ -6,7 +6,7 @@ const User = require('../models/User');
 const PendingUser = require('../models/PendingUser')
 const { generateVerificationCode, sendVerificationCode } = require('../services/emailService')
 const { handleControllerError } = require('../utils/handleErrors');
-
+const AppError = require('../utils/AppError');
 
 exports.getSignUp = (req, res) => {
   res.render('signup');
@@ -142,7 +142,7 @@ exports.sendVerificationCode = async (req, res) => {
   }
 };
 
-exports.postSignIn = async (req, res) => {
+exports.postSignIn = async (req, res, next) => {
   try {
       const { email, password } = req.body;
       
@@ -164,11 +164,12 @@ exports.postSignIn = async (req, res) => {
           : await bcrypt.compare(password, '$2b$12$dummyhashdummyhashdummyha');
 
       if (!user || !validPassword) {
-          throw {
-              isCustom: true,
-              status: 401,
-              message: 'Credenciales inválidas'
-          };
+         next(new AppError('Datos inválidos', 401));
+          // throw {
+          //     isCustom: true,
+          //     status: 401,
+          //     message: 'Datos inválidos'
+          // };
       }
 
       const token = jwt.sign(
