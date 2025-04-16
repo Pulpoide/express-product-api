@@ -1,6 +1,5 @@
 const Product = require('../models/product');
 const AppError = require('../utils/AppError');
-const responseService = require('../services/responseService');
 
 const createProduct = async (req, res, next) => {
     try {
@@ -19,7 +18,7 @@ const getAllProducts = async (req, res, next) => {
     try {
         const products = await Product.find({});
 
-        return res.json({ products });
+        return res.json({ status:'OK', products });
         
     } catch (error) {
         if (req.accepts('json')) {
@@ -34,7 +33,7 @@ const getProductById = async (req, res, next) => {
         const product = await Product.findById(req.params.id)
             .orFail(() => new AppError('Producto no encontrado', 404));
 
-        return res.json({ product });
+        return res.json({ status:'OK', product });
 
     } catch (error) {
         if (error.message.includes('Producto no encontrado')) {
@@ -66,7 +65,7 @@ const deleteProduct = async (req, res, next) => {
         if (!product) return next(new AppError('Producto no encontrado', 404));
         res.status(200).json({
             status: "OK",
-            message: 'Producto eliminado correctamente'
+            message: 'Producto eliminado exitosamente'
         });
     } catch (error) {
         next(new AppError('Error al eliminar el producto', 500));
