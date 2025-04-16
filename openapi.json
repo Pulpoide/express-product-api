@@ -747,7 +747,7 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "No autorizado"
+                  "example": "Acceso no autorizado"
                 }
               }
             }
