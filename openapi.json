@@ -27,7 +27,7 @@
                 "properties": {
                   "email": {
                     "type": "string",
-                    "example": "usuario@ejemplo.com"
+                    "example": "existente@usuario.com"
                   },
                   "password": {
                     "type": "string",
@@ -63,9 +63,13 @@
                       "type": "boolean",
                       "example": "true"
                     },
-                    "redirect": {
+                    "userId": {
                       "type": "string",
-                      "example": "/products"
+                      "example": "67t953m62b66c0f5d73be74d"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "existente@usuario.com"
                     }
                   }
                 }
@@ -232,6 +236,9 @@
     "/products": {
       "get": {
         "summary": "Obtener todos los productos",
+        "tags": [
+          "Productos"
+        ],
         "responses": {
           "200": {
             "description": "Listado de productos",
@@ -254,6 +261,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
           }
         }
       },
@@ -264,6 +274,9 @@
           }
         ],
         "summary": "Crear un nuevo producto",
+        "tags": [
+          "Productos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -285,6 +298,10 @@
                     "status": {
                       "type": "string",
                       "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Producto creado exitosamente"
                     },
                     "product": {
                       "$ref": "#/components/schemas/Product"
@@ -309,6 +326,9 @@
     "/products/{id}": {
       "get": {
         "summary": "Obtener un producto por ID",
+        "tags": [
+          "Productos"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -375,6 +395,9 @@
           }
         ],
         "summary": "Actualizar un producto existente",
+        "tags": [
+          "Productos"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -458,6 +481,9 @@
           }
         ],
         "summary": "Eliminar un producto",
+        "tags": [
+          "Productos"
+        ],
         "parameters": [
           {
             "name": "id",
