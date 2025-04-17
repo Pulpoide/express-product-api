@@ -26,7 +26,7 @@ module.exports = {
 
     sendCode: [
         body('email')
-            .isEmail().withMessage('Debe ser un email válido')
+            .isEmail().withMessage('Debe proporcionar un email válido')
             .normalizeEmail()
             .custom(async (email) => {
                 const existingUser = await User.findOne({ email });
@@ -49,4 +49,41 @@ module.exports = {
                 return true;
               })
     ],
+
+    forgotPassword: [
+        body('email')
+            .isEmail()
+            .withMessage('Debe proporcionar un email válido')
+            .normalizeEmail()
+            .custom(async (email) => {
+                const user = await User.findOne({ email }).lean();
+          
+                if (!user) {
+                  throw new Error('No existe una cuenta con este email');
+                }
+          
+                if (user.lastCodeSentAt) {
+                  const tiempoTranscurrido = Date.now() - new Date(user.lastCodeSentAt).getTime();
+                  const tiempoRestante = Math.ceil((60000 - tiempoTranscurrido) / 1000); 
+          
+                  if (tiempoRestante > 0) {
+                    throw new Error(`Espere ${tiempoRestante} segundos para enviar otro correo`);
+                  }
+                }
+          
+                return true;
+              })
+    ],
+
+    resetPassword: [
+        body('token')
+            .notEmpty()
+            .withMessage('El token es obligatorio'),
+        body('password')
+            .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
+            .matches(/^(?=.*\d)(?=.*[a-zA-Z])/).withMessage('La contraseña debe contener al menos un número y una letra'),
+        body('confirmPassword')
+            .custom((value, { req }) => value === req.body.password)
+            .withMessage('Las contraseñas no coinciden')
+    ]
 };
