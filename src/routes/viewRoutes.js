@@ -14,5 +14,12 @@ router.get('/product/:id', authenticateToken, viewsController.mostrarProducto);
 router.get('/product/edit/:id', authenticateToken, viewsController.editarProducto);
 router.get('/products', authenticateToken, viewsController.mostrarProductos);
 
+router.get('/forgot-password', (req, res) => res.render('forgotPassword'));
+
+router.get('/reset-password/:token', (req, res) => {
+  const { token } = req.params;
+  res.render('resetPassword', { token });
+});
+
 module.exports = router;
 
