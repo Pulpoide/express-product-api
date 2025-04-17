@@ -24,28 +24,37 @@ API Products es una aplicación backend diseñada para gestionar un CRUD (Crear,
 ## Estructura del Proyecto
 
 ```bash
-aoi2_w2
-├── index.js 
-├── src
-│ ├── controllers 
-│ │ ├── productController.js
-│ │ ├── upload.js 
-│ │ └── viewsController.js 
-│ ├── database 
-│ │ └── db.js 
-│ ├── routes 
-│ │ └── productRoutes.js 
-├── views 
-│ ├── template 
-│ ├── crear.ejs 
-│ ├── detalle.ejs 
-│ ├── editar.ejs 
-│ ├── index.ejs 
-│ └── productos.ejs 
-├── public 
-│ ├── images 
-│ ├── video 
-│ └── favicon.ico
+src/
+├── config/
+│   └── db.js
+├── constants/
+│   └── httpStatus.js
+├── controllers/
+│   ├── authController.js
+│   ├── productController.js
+│   ├── uploadController.js
+│   └── viewsController.js
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── errorHandler.js
+│   ├── rateLimiter.js
+│   ├── validatorMiddleware.js
+│   └── validators/
+│       └── authValidator.js
+├── models/
+│   ├── PendingUser.js
+│   ├── Product.js
+│   └── User.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── productRoutes.js
+│   ├── uploadRoutes.js
+│   └── viewRoutes.js
+├── services/
+│   └── emailService.js
+├── utils/
+│   ├── AppError.js
+│   └── handleErrors.js
 ```
 
 ## Instalación y Uso
