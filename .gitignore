@@ -11,3 +11,7 @@ node_modules/
 
 # Sistema
 .DS_Store
+
+# Ignorar imágenes subidas por los usuarios
+public/images/*
+!public/images/default.jpg
