@@ -6,6 +6,7 @@ const favicon = require('serve-favicon');
 const path = require('path');
 const swaggerUi = require("swagger-ui-express");
 const rateLimit = require('express-rate-limit');
+
 require('dotenv').config();
 
 const productsRoutes = require('./src/routes/productRoutes');
@@ -99,12 +100,9 @@ app.use((req, res) => {
 });
 app.use(errorHandler);
 
-
 app.listen(PORT, () => {
   console.log(`✅ Server escuchando el puerto ${PORT} -> http://localhost:${PORT}/`);
 });
 
-
-
-
+module.exports = app;
 
