@@ -8,10 +8,12 @@ const errorHandler = (err, req, res, next) => {
         ip: req.ip
     } : {};
 
-    console.error(`[ERROR] ${err.message}`, {
-        ...requestInfo,
-        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
+    if (process.env.NODE_ENV !== 'test') {
+        console.error(`[ERROR] ${err.message}`, {
+            ...requestInfo,
+            stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
+    }
 
     const statusCode = err.statusCode || HTTP_STATUS.INTERNAL_ERROR;
     const response = {
