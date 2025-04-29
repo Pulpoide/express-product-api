@@ -56,7 +56,6 @@ const editarProducto = async (req, res) => {
                 Cookie: cookie
             }
         }); const data = response.data;
-        console.log("DATITA", data);
         res.render("edit", { product: data.product });
     } catch (error) {
         console.error("⚠️ Error al editar el producto:", error)
