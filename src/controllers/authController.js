@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const PendingUser = require('../models/PendingUser');
 const { generateVerificationCode, sendVerificationCode, sendPasswordResetEmail } = require('../services/emailService');
-const { handleControllerError } = require('../utils/handleErrors');
 const AppError = require('../utils/AppError');
 
 exports.getSignUp = (req, res) => {
@@ -16,13 +15,18 @@ exports.getSignIn = (req, res) => {
   res.render('signin');
 };
 
-exports.postSignUp = async (req, res) => {
+exports.postSignUp = async (req, res, next) => {
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
 
     const { email, password, verificationCode } = req.body;
+
+    const existingUser = await User.findOne({ email }).session(session);
+    if (existingUser) {
+      throw new AppError('El usuario ya existe', 400);
+    }
 
     const pendingUser = await PendingUser.findOne({
       email,
@@ -31,21 +35,11 @@ exports.postSignUp = async (req, res) => {
     }).session(session);
 
     if (!pendingUser) {
-      throw {
-        isCustom: true,
-        status: 400,
-        message: 'Código inválido o expirado'
-      };
+      throw new AppError('Código inválido o expirado', 400);
     }
 
-    const existingUser = await User.findOne({ email }).session(session);
-    if (existingUser) {
-      await PendingUser.deleteOne({ email }).session(session);
-      await session.commitTransaction();
-      return res.status(400).json({
-        success: false,
-        error: 'El usuario ya existe'
-      });
+    if (password !== req.body.confirmPassword) {
+      throw new AppError('Las contraseñas no coinciden', 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -80,13 +74,13 @@ exports.postSignUp = async (req, res) => {
 
   } catch (error) {
     await session.abortTransaction();
-    handleControllerError(res, error);
+    next(error);
   } finally {
     session.endSession();
   }
 };
 
-exports.sendVerificationCode = async (req, res) => {
+exports.sendVerificationCode = async (req, res, next) => {
   const session = await mongoose.startSession();
 
   try {
@@ -96,10 +90,7 @@ exports.sendVerificationCode = async (req, res) => {
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
       await session.commitTransaction();
-      return res.status(400).json({
-        success: false,
-        error: 'El email ya está registrado'
-      });
+      throw new AppError('El email ya está registrado', 400);
     }
 
     const verificationCode = generateVerificationCode();
@@ -137,7 +128,7 @@ exports.sendVerificationCode = async (req, res) => {
     });
   } catch (error) {
     await session.abortTransaction();
-    handleControllerError(res, error);
+    next(error);
   } finally {
     session.endSession();
   }
@@ -149,11 +140,7 @@ exports.postSignIn = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw {
-        isCustom: true,
-        status: 400,
-        message: errors.array().map(e => e.msg).join(', ')
-      };
+      throw new AppError(errors.array().map(e => e.msg), 400);
     }
 
     const user = await User.findOne({ email })
@@ -165,7 +152,7 @@ exports.postSignIn = async (req, res, next) => {
       : await bcrypt.compare(password, '$2b$12$dummyhashdummyhashdummyha');
 
     if (!user || !validPassword) {
-      next(new AppError('Datos inválidos', 401));
+      throw new AppError('Datos inválidos', 401);
     }
 
     const token = jwt.sign(
@@ -188,11 +175,11 @@ exports.postSignIn = async (req, res, next) => {
     });
 
   } catch (error) {
-    handleControllerError(res, error);
+    next(error);
   }
 };
 
-exports.forgotPassword = async (req, res) => {
+exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
 
   try {
@@ -212,10 +199,7 @@ exports.forgotPassword = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'No existe una cuenta con este email'
-      });
+      throw new AppError('No existe una cuenta con este email', 404);
     }
 
     const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
@@ -229,23 +213,16 @@ exports.forgotPassword = async (req, res) => {
       nextRequest: new Date(Date.now() + 60000).toISOString() 
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: 'Error al procesar la solicitud'
-    });
+    next(error);
   }
 };
 
-exports.resetPassword = async (req, res) => {
+exports.resetPassword = async (req, res, next) => {
   const { token, password, confirmPassword } = req.body;
 
   try {
     if (password !== confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        error: 'Las contraseñas no coinciden'
-      });
+      throw new AppError('Las contraseñas no coinciden', 400);
     }
 
     const user = await User.findOne({
@@ -254,10 +231,7 @@ exports.resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        error: 'El token es inválido o ha expirado'
-      });
+      throw new AppError('El token es inválido o ha expirado', 400);
     }
 
     user.password = await bcrypt.hash(password, 12);
@@ -270,11 +244,7 @@ exports.resetPassword = async (req, res) => {
       message: 'Contraseña restablecida con éxito'
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: 'Error al procesar la solicitud'
-    });
+    next(error);
   }
 };
 

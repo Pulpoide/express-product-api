@@ -15,21 +15,18 @@ const errorHandler = (err, req, res, next) => {
 
     const statusCode = err.statusCode || HTTP_STATUS.INTERNAL_ERROR;
     const response = {
-        status: "error",
-        message: err.message || "Error interno del servidor",
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+        success: false,
+        errors: []
     };
 
     if (err.code === 11000) {
-        response.message = 'El recurso ya existe';
-        response.errors = { duplicate: Object.keys(err.keyPattern) };
-    }
-
-    if (err.name === 'ValidationError') {
-        response.message = 'Datos inválidos';
-        response.errors = Object.fromEntries(
-            Object.entries(err.errors).map(([key, val]) => [key, val.message])
-        );
+        response.errors.push('El recurso ya existe');
+    } else if (err.name === 'ValidationError') {
+        response.errors = Object.values(err.errors).map(val => val.message);
+    } else if (err instanceof require('../utils/AppError')) {
+        response.errors.push(err.message);
+    } else {
+        response.errors.push(err.message || 'Error interno del servidor');
     }
 
     if (!res.headersSent) {
