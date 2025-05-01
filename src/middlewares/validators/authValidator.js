@@ -55,24 +55,6 @@ module.exports = {
             .isEmail()
             .withMessage('Debe proporcionar un email válido')
             .normalizeEmail()
-            .custom(async (email) => {
-                const user = await User.findOne({ email }).lean();
-          
-                if (!user) {
-                  throw new Error('No existe una cuenta con este email');
-                }
-          
-                if (user.lastCodeSentAt) {
-                  const tiempoTranscurrido = Date.now() - new Date(user.lastCodeSentAt).getTime();
-                  const tiempoRestante = Math.ceil((60000 - tiempoTranscurrido) / 1000); 
-          
-                  if (tiempoRestante > 0) {
-                    throw new Error(`Espere ${tiempoRestante} segundos para enviar otro correo`);
-                  }
-                }
-          
-                return true;
-              })
     ],
 
     resetPassword: [
