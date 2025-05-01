@@ -8,6 +8,7 @@ const swaggerUi = require("swagger-ui-express");
 const rateLimit = require('express-rate-limit');
 
 require('dotenv').config();
+console.log(`🌍 Entorno actual: ${process.env.NODE_ENV}`);
 
 const productsRoutes = require('./src/routes/productRoutes');
 const uploadRoutes = require('./src/routes/uploadRoutes');
@@ -100,9 +101,13 @@ app.use((req, res) => {
 });
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`✅ Server escuchando el puerto ${PORT} -> http://localhost:${PORT}/`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`✅ Server escuchando el puerto ${PORT} -> http://localhost:${PORT}/`);
+  });
+} else {
+  console.log('🧪 Modo de prueba: El servidor no se iniciará.');
+}
 
 module.exports = app;
 
