@@ -2,6 +2,7 @@ const { MongoMemoryReplSet } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 let replSet;
+process.env.NODE_ENV = 'test';
 
 module.exports = async () => {
   replSet = await MongoMemoryReplSet.create({
