@@ -15,6 +15,8 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
+    console.error(`[ERROR HANDLER] Mensaje: ${err.message}, Código: ${err.statusCode || 500}`);
+
     const statusCode = err.statusCode || HTTP_STATUS.INTERNAL_ERROR;
     const response = {
         success: false,
