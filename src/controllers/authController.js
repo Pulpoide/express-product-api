@@ -28,16 +28,6 @@ exports.postSignUp = async (req, res, next) => {
       throw new AppError('El usuario ya existe', 400);
     }
 
-    const pendingUser = await PendingUser.findOne({
-      email,
-      verificationCode,
-      verificationCodeExpires: { $gt: Date.now() }
-    }).session(session);
-
-    if (!pendingUser) {
-      throw new AppError('Código inválido o expirado', 400);
-    }
-
     if (password !== req.body.confirmPassword) {
       throw new AppError('Las contraseñas no coinciden', 400);
     }
@@ -50,8 +40,20 @@ exports.postSignUp = async (req, res, next) => {
     });
 
     await newUser.save({ session });
-    await PendingUser.deleteOne({ email }).session(session);
     await session.commitTransaction();
+    session.endSession();
+
+    const pendingUser = await PendingUser.findOne({
+      email,
+      verificationCode,
+      verificationCodeExpires: { $gt: Date.now() }
+    });
+
+    if (!pendingUser) {
+      throw new AppError('Código inválido o expirado', 400);
+    }
+
+    await PendingUser.deleteOne({ email });
 
     const token = jwt.sign(
       { userId: newUser._id },
@@ -100,7 +102,11 @@ exports.sendVerificationCode = async (req, res, next) => {
       lastCodeSentAt: Date.now()
     };
 
-    await PendingUser.findOneAndUpdate(
+    await sendVerificationCode(email, verificationCode);
+    await session.commitTransaction();
+    session.endSession();
+
+    const updatedPendingUser = await PendingUser.findOneAndUpdate(
       { email },
       {
         $set: {
@@ -112,13 +118,13 @@ exports.sendVerificationCode = async (req, res, next) => {
       {
         upsert: true,
         new: true,
-        session,
         setDefaultsOnInsert: true
       }
     );
 
-    await sendVerificationCode(email, verificationCode);
-    await session.commitTransaction();
+    if (!updatedPendingUser) {
+      throw new AppError('Error al crear o actualizar el usuario pendiente', 500);
+    }
 
     res.status(200).json({
       success: true,
@@ -127,7 +133,9 @@ exports.sendVerificationCode = async (req, res, next) => {
       nextRequest: new Date(Date.now() + 60000).toISOString()
     });
   } catch (error) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     next(error);
   } finally {
     session.endSession();
