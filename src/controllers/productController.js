@@ -30,16 +30,15 @@ const getAllProducts = async (req, res, next) => {
 
 const getProductById = async (req, res, next) => {
     try {
-        const product = await Product.findById(req.params.id)
-            .orFail(() => new AppError('Producto no encontrado', 404));
+        const product = await Product.findById(req.params.id);
 
-        return res.json({ status:'OK', product });
-
-    } catch (error) {
-        if (error.message.includes('Producto no encontrado')) {
-            return res.status(404).render('error', { message: 'Producto no encontrado' });
+        if (!product) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        next(error);
+
+        return res.status(200).json({ status: 'OK', product });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al obtener el producto' });
     }
 };
 
