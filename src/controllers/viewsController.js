@@ -4,13 +4,12 @@ const mostrarProductos = async (req, res) => {
   try {
     const response = await axios.get('http://localhost:8888/api/products/', {
       withCredentials: true,
+      headers: { Cookie: req.headers.cookie },
     });
     const data = response.data;
-
-    res.render('products', { products: data.products });
+    res.render('products', { products: data.products, user: req.user });
   } catch (error) {
     console.error('⚠️ Error al mostrar los productos:', error);
-
     if (error.response && error.response.status === 403) {
       return res.redirect('/signin');
     }
@@ -24,10 +23,10 @@ const mostrarProducto = async (req, res) => {
     const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
       headers: { Cookie: req.headers.cookie },
     });
-
     res.render('detail', {
       product: response.data.product,
       defaultImage: '/images/default.jpg',
+      user: req.user,
     });
   } catch (error) {
     if (error.response && error.response.status === 401) {
