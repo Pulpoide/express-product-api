@@ -20,7 +20,7 @@ if (nodeEnv === 'test') {
 
 mongoose
   .connect(mongoURI)
-  .then(() => console.log(`✅ Conectado a MongoDB en: ${mongoURI}`))
+  .then(() => console.log(`✅ Conectado a MongoDB Atlas`))
   .catch((error) => {
     console.error('❌ Error conectando a MongoDB:', error);
     process.exit(1);
