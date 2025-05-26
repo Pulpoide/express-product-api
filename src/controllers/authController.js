@@ -74,7 +74,9 @@ exports.postSignUp = async (req, res, next) => {
       email: newUser.email,
     });
   } catch (error) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
     next(error);
   } finally {
     session.endSession();
