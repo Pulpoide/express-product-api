@@ -49,6 +49,6 @@ describe('GET /api/products', () => {
 
     const response = await request(app).get('/api/products').set('Cookie', mockCookie).expect(500);
 
-    expect(response.body.errors).toContain('Database error');
+    expect(response.body.errors).toContain('Error al obtener productos');
   });
 });
