@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, _next) => {
       }
     : {};
 
-  // Silenciar logs molestos de rutas automáticas (como Chrome DevTools)
+  // Silenciar logs de rutas automáticas (como Chrome DevTools)
   const silentPaths = [
     '/.well-known/appspecific/com.chrome.devtools.json',
     '/.well-known/',
