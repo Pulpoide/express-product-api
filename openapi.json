@@ -339,6 +339,35 @@
         }
       }
     },
+    "/auth/logout": {
+      "post": {
+        "summary": "Cerrar sesión de usuario",
+        "tags": [
+          "Autenticación"
+        ],
+        "description": "Elimina la cookie de autenticación JWT y cierra la sesión del usuario.",
+        "responses": {
+          "200": {
+            "description": "Sesión cerrada correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Sesión cerrada correctamente" }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Sesión cerrada correctamente"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products": {
       "get": {
         "summary": "Obtener todos los productos",
