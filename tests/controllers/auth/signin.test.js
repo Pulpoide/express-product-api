@@ -63,6 +63,7 @@ describe('POST /auth/signin', () => {
   it('should return validation errors for missing fields', async () => {
     const response = await request(app).post('/api/auth/signin').send({
       email: '',
+      password: 'password123',
     });
 
     expect(response.statusCode).toBe(400);
