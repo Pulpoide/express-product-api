@@ -19,7 +19,7 @@ const getAllProducts = async (req, res, next) => {
     const products = await Product.find({});
     res.json({ status: 'OK', products });
   } catch (error) {
-    next(new AppError('Database error', 500));
+    next(new AppError('Error al obtener productos', 500));
   }
 };
 
