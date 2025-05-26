@@ -1,0 +1,25 @@
+# Ignora node_modules y dependencias locales
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignora archivos de tests y configuración de tests
+coverage
+tests
+jest.config.js
+jest.setup.js
+jest.teardown.js
+
+# Ignora archivos de entorno locales
+.env
+.env.*
+
+# Ignora archivos del sistema y editor
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Ignora archivos temporales
+*.swp
+*.swo
