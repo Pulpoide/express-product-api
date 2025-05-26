@@ -77,7 +77,60 @@
             }
           },
           "401": {
-            "$ref": "#/components/responses/BadRequestError"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Datos inválidos"]
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "errors": ["Datos inválidos"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Solicitud incorrecta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Debe ser un email válido"]
+                    }
+                  }
+                },
+                "examples": {
+                  "EmailInvalido": {
+                    "summary": "Email inválido",
+                    "value": {
+                      "success": false,
+                      "errors": ["Debe ser un email válido"]
+                    }
+                  },
+                  "PasswordFaltante": {
+                    "summary": "Password faltante",
+                    "value": {
+                      "success": false,
+                      "errors": ["El campo password es obligatorio"]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -172,10 +225,7 @@
                     {
                       "type": "object",
                       "properties": {
-                        "success": {
-                          "type": "boolean",
-                          "example": false
-                        },
+                        "success": { "type": "boolean", "example": false },
                         "error": {
                           "type": "string",
                           "enum": [
@@ -188,12 +238,25 @@
                       }
                     }
                   ]
+                },
+                "examples": {
+                  "UsuarioYaExiste": {
+                    "summary": "El usuario ya existe",
+                    "value": {
+                      "success": false,
+                      "errors": ["El usuario ya existe"]
+                    }
+                  },
+                  "CodigoInvalidoOExpirado": {
+                    "summary": "Código inválido o expirado",
+                    "value": {
+                      "success": false,
+                      "errors": ["Código inválido o expirado"]
+                    }
+                  }
                 }
               }
             }
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -225,10 +288,53 @@
         },
         "responses": {
           "200": {
-            "description": "Código enviado exitosamente"
+            "description": "Código enviado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Código enviado con éxito" },
+                    "cooldown": { "type": "integer", "example": 60 },
+                    "nextRequest": { "type": "string", "format": "date-time", "example": "2025-05-26T17:40:39.618Z" }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Código enviado con éxito",
+                  "cooldown": 60,
+                  "nextRequest": "2025-05-26T17:40:39.618Z"
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequestError"
+            "description": "Solicitud incorrecta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Debe proporcionar un email válido"]
+                    }
+                  }
+                },
+                "examples": {
+                  "EmailInvalido": {
+                    "summary": "Email inválido",
+                    "value": {
+                      "success": false,
+                      "errors": ["Debe proporcionar un email válido"]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -264,6 +370,27 @@
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Error al obtener productos"]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -314,11 +441,26 @@
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenError"
-          },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Error al crear el producto"]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -370,13 +512,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
+                    "success": {
+                      "type": "boolean",
+                      "example": false
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Producto no encontrado"
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Producto no encontrado"]
                     }
                   }
                 }
@@ -384,7 +527,25 @@
             }
           },
           "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Error al obtener el producto"]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -439,13 +600,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
+                    "success": {
+                      "type": "boolean",
+                      "example": false
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Producto no encontrado"
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Producto no encontrado"]
                     }
                   }
                 }
@@ -459,13 +621,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
+                    "success": {
+                      "type": "boolean",
+                      "example": false
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Error al actualizar el producto"
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Error al actualizar el producto"]
                     }
                   }
                 }
@@ -525,13 +688,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
+                    "success": {
+                      "type": "boolean",
+                      "example": false
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Producto no encontrado"
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Producto no encontrado"]
                     }
                   }
                 }
@@ -545,13 +709,14 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
+                    "success": {
+                      "type": "boolean",
+                      "example": false
                     },
-                    "message": {
-                      "type": "string",
-                      "example": "Error al eliminar el producto"
+                    "errors": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "example": ["Error al eliminar el producto"]
                     }
                   }
                 }
@@ -615,7 +780,41 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequestError"
+            "description": "Solicitud incorrecta",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "success": { "type": "boolean", "example": false },
+                        "errors": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "examples": {
+                  "ArchivoNoProporcionado": {
+                    "summary": "No se proporcionó ningún archivo",
+                    "value": {
+                      "success": false,
+                      "errors": ["No se proporcionó ningún archivo"]
+                    }
+                  },
+                  "ArchivoNoPermitido": {
+                    "summary": "Solo se permiten imágenes (JPEG, PNG, GIF)",
+                    "value": {
+                      "success": false,
+                      "errors": ["Solo se permiten imágenes (JPEG, PNG, GIF)"]
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
@@ -639,9 +838,6 @@
                 }
               }
             }
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -741,73 +937,75 @@
             "schema": {
               "type": "object",
               "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
+                "success": {
+                  "type": "boolean",
+                  "example": false
                 },
-                "message": {
-                  "type": "string",
-                  "example": "Acceso no autorizado"
+                "errors": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "example": ["Acceso no autorizado"]
                 }
               }
             }
           }
-        }
-      },
-      "ForbiddenError": {
-        "description": "No tienes permisos para esta acción",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Acceso prohibido"
+        },
+        "ForbiddenError": {
+          "description": "No tienes permisos para esta acción",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "error"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Acceso prohibido"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "BadRequestError": {
-        "description": "Solicitud incorrecta",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Datos inválidos"
+        },
+        "BadRequestError": {
+          "description": "Solicitud incorrecta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "error"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Datos inválidos"
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "InternalServerError": {
-        "description": "Error interno del servidor",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string",
-                  "example": "error"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal Server Error"
+        },
+        "InternalServerError": {
+          "description": "Error interno del servidor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "errors": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["Error interno del servidor"]
+                  }
                 }
               }
             }
