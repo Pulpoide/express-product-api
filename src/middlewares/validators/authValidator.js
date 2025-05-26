@@ -21,7 +21,10 @@ module.exports = {
     }),
   ],
 
-  signin: [body('email').isEmail().withMessage('Debe ser un email válido').normalizeEmail()],
+  signin: [
+    body('email').isEmail().withMessage('Debe ser un email válido').normalizeEmail(),
+    body('password').notEmpty().withMessage('El campo password es obligatorio')
+  ],
 
   sendCode: [
     body('email')
