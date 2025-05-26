@@ -10,7 +10,14 @@ const errorHandler = (err, req, res, _next) => {
       }
     : {};
 
-  if (process.env.NODE_ENV !== 'test') {
+  // Silenciar logs molestos de rutas automáticas (como Chrome DevTools)
+  const silentPaths = [
+    '/.well-known/appspecific/com.chrome.devtools.json',
+    '/.well-known/',
+  ];
+  const isSilent = silentPaths.some((p) => req.originalUrl.startsWith(p));
+
+  if (process.env.NODE_ENV !== 'test' && !isSilent) {
     console.error('[ERROR HANDLER]', {
       mensaje: err && err.message ? err.message : String(err),
       codigo: err && err.statusCode ? err.statusCode : 500,
