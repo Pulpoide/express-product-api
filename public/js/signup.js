@@ -23,7 +23,18 @@ document.getElementById('sendCode').addEventListener('click', async () => {
       successElement.textContent = 'Código enviado, revisa tu correo electrónico';
       successElement.style.display = 'block';
     } else {
-      errorElement.textContent = data.errors || 'Error al enviar código';
+      let errors = data.errors || ['Error al enviar código'];
+      if (typeof errors === 'string') {
+        errors = errors.split(',');
+      } else if (Array.isArray(errors) && errors.length === 1 && errors[0].includes(',')) {
+        errors = errors[0].split(',');
+      }
+      errorElement.innerHTML = '';
+      errors.forEach(e => {
+        const li = document.createElement('li');
+        li.textContent = e.trim();
+        errorElement.appendChild(li);
+      });
       errorElement.style.display = 'block';
     }
   } catch (error) {
@@ -47,8 +58,9 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   const verificationCode = document.getElementById('verificationCode').value;
 
   if (password !== confirmPassword) {
-    errorElement.textContent = 'Las contraseñas no coinciden';
+    errorElement.innerHTML = '<li>Las contraseñas no coinciden</li>';
     errorElement.style.display = 'block';
+    return;
   }
 
   try {
@@ -65,11 +77,26 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.errors || data.message || 'Error desconocido');
+    if (!response.ok) {
+      let errors = data.errors || ['Error desconocido'];
+      if (typeof errors === 'string') {
+        errors = errors.split(',');
+      } else if (Array.isArray(errors) && errors.length === 1 && errors[0].includes(',')) {
+        errors = errors[0].split(',');
+      }
+      errorElement.innerHTML = '';
+      errors.forEach(e => {
+        const li = document.createElement('li');
+        li.textContent = e.trim();
+        errorElement.appendChild(li);
+      });
+      errorElement.style.display = 'block';
+      return;
+    }
 
     window.location.replace('/products');
   } catch (error) {
-    errorElement.textContent = error.message;
+    errorElement.innerHTML = `<li>${error.message}</li>`;
     errorElement.style.display = 'block';
   }
 });
