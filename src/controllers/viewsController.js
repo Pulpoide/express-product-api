@@ -1,66 +1,68 @@
-const axios = require('axios')
+const axios = require('axios');
 
 const mostrarProductos = async (req, res) => {
-    try {
-        const response = await axios.get('http://localhost:8888/api/products/', { withCredentials: true });
-        const data = response.data;
+  try {
+    const response = await axios.get('http://localhost:8888/api/products/', {
+      withCredentials: true,
+    });
+    const data = response.data;
 
-        res.render("products", { products: data.products });
-    } catch (error) {
-        console.error("⚠️ Error al mostrar los productos:", error)
+    res.render('products', { products: data.products });
+  } catch (error) {
+    console.error('⚠️ Error al mostrar los productos:', error);
 
-        if (error.response && error.response.status === 403) {
-            return res.redirect('/signin');
-        }
-
-        return res.status(500).json({ message: 'Error interno' });
+    if (error.response && error.response.status === 403) {
+      return res.redirect('/signin');
     }
+    return res.status(500).json({ success: false, errors: ['Error interno'] });
+  }
 };
 
 const mostrarProducto = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
-            headers: { Cookie: req.headers.cookie }
-        });
+  try {
+    const id = req.params.id;
+    const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+      headers: { Cookie: req.headers.cookie },
+    });
 
-        res.render("detail", { 
-            product: response.data.product,
-            defaultImage: '/images/default.jpg'
-        });
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            return res.redirect('/signin');
-        }
-        console.error("⚠️ Error al obtener el producto:", error);
-        return res.status(500).json({ message: "Error interno" });
+    res.render('detail', {
+      product: response.data.product,
+      defaultImage: '/images/default.jpg',
+    });
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      return res.redirect('/signin');
     }
+    console.error('⚠️ Error al obtener el producto:', error);
+    return res.status(500).json({ success: false, errors: ['Error interno'] });
+  }
 };
 
 const crearProducto = async (req, res) => {
-    try {
-        res.render("create")
-    } catch (error) {
-        console.error("⚠️ Error al crear el producto:", error)
-        return res.status(500).json({ message: "Error interno" })
-    }
-}
+  try {
+    res.render('create');
+  } catch (error) {
+    console.error('⚠️ Error al crear el producto:', error);
+    return res.status(500).json({ success: false, errors: ['Error interno'] });
+  }
+};
 
 const editarProducto = async (req, res) => {
-    let id = req.params.id;
-    try {
-        const cookie = req.headers.cookie;
+  let id = req.params.id;
+  try {
+    const cookie = req.headers.cookie;
 
-        const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
-            headers: {
-                Cookie: cookie
-            }
-        }); const data = response.data;
-        res.render("edit", { product: data.product });
-    } catch (error) {
-        console.error("⚠️ Error al editar el producto:", error)
-        return res.status(500).json({ message: "Error interno" })
-    }
-}
+    const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+      headers: {
+        Cookie: cookie,
+      },
+    });
+    const data = response.data;
+    res.render('edit', { product: data.product });
+  } catch (error) {
+    console.error('⚠️ Error al editar el producto:', error);
+    return res.status(500).json({ success: false, errors: ['Error interno'] });
+  }
+};
 
-module.exports = { mostrarProductos, mostrarProducto, crearProducto, editarProducto }
+module.exports = { mostrarProductos, mostrarProducto, crearProducto, editarProducto };

@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "set NODE_ENV=development && nodemon index.js",
-    "start": "set NODE_ENV=production && node index.js",
-    "test": "set NODE_ENV=test && jest --runInBand"
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand"
   },
   "author": "Joaquin D. Olivero",
   "license": "ISC",
@@ -23,20 +23,24 @@
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.13.0",
     "mongoose": "^8.10.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.6.2",
     "nodemailer": "^6.10.0",
     "serve-favicon": "^2.5.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
+    "cookie": "^1.0.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
     "jest": "^29.7.0",
     "mongodb-memory-server": "^10.1.4",
     "nodemon": "^3.1.9",
+    "prettier": "^3.5.3",
     "supertest": "^7.1.0"
   }
 }

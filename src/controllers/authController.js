@@ -5,7 +5,11 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const PendingUser = require('../models/PendingUser');
-const { generateVerificationCode, sendVerificationCode, sendPasswordResetEmail } = require('../services/emailService');
+const {
+  generateVerificationCode,
+  sendVerificationCode,
+  sendPasswordResetEmail,
+} = require('../services/emailService');
 const AppError = require('../utils/AppError');
 
 exports.getSignUp = (req, res) => {
@@ -36,7 +40,7 @@ exports.postSignUp = async (req, res, next) => {
     const newUser = new User({
       email,
       password: hashedPassword,
-      isVerified: true
+      isVerified: true,
     });
 
     await newUser.save({ session });
@@ -46,7 +50,7 @@ exports.postSignUp = async (req, res, next) => {
     const pendingUser = await PendingUser.findOne({
       email,
       verificationCode,
-      verificationCodeExpires: { $gt: Date.now() }
+      verificationCodeExpires: { $gt: Date.now() },
     });
 
     if (!pendingUser) {
@@ -55,25 +59,20 @@ exports.postSignUp = async (req, res, next) => {
 
     await PendingUser.deleteOne({ email });
 
-    const token = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 3600000
+      maxAge: 3600000,
     });
 
     res.status(201).json({
       success: true,
       userId: newUser._id,
-      email: newUser.email
+      email: newUser.email,
     });
-
   } catch (error) {
     await session.abortTransaction();
     next(error);
@@ -99,7 +98,7 @@ exports.sendVerificationCode = async (req, res, next) => {
     const updateData = {
       verificationCode,
       verificationCodeExpires: new Date(Date.now() + 15 * 60 * 1000),
-      lastCodeSentAt: Date.now()
+      lastCodeSentAt: Date.now(),
     };
 
     await sendVerificationCode(email, verificationCode);
@@ -112,13 +111,13 @@ exports.sendVerificationCode = async (req, res, next) => {
         $set: {
           verificationCode,
           verificationCodeExpires: updateData.verificationCodeExpires,
-          lastCodeSentAt: updateData.lastCodeSentAt
-        }
+          lastCodeSentAt: updateData.lastCodeSentAt,
+        },
       },
       {
         upsert: true,
         new: true,
-        setDefaultsOnInsert: true
+        setDefaultsOnInsert: true,
       }
     );
 
@@ -130,7 +129,7 @@ exports.sendVerificationCode = async (req, res, next) => {
       success: true,
       message: 'Código enviado con éxito',
       cooldown: 60,
-      nextRequest: new Date(Date.now() + 60000).toISOString()
+      nextRequest: new Date(Date.now() + 60000).toISOString(),
     });
   } catch (error) {
     if (session.inTransaction()) {
@@ -148,12 +147,13 @@ exports.postSignIn = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new AppError(errors.array().map(e => e.msg), 400);
+      throw new AppError(
+        errors.array().map((e) => e.msg),
+        400
+      );
     }
 
-    const user = await User.findOne({ email })
-      .select('+password')
-      .lean();
+    const user = await User.findOne({ email }).select('+password').lean();
 
     const validPassword = user
       ? await bcrypt.compare(password, user.password)
@@ -163,25 +163,20 @@ exports.postSignIn = async (req, res, next) => {
       throw new AppError('Datos inválidos', 401);
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 3600000
+      maxAge: 3600000,
     });
 
     res.status(200).json({
       success: true,
       userId: user._id,
-      email: user.email
+      email: user.email,
     });
-
   } catch (error) {
     next(error);
   }
@@ -192,19 +187,15 @@ exports.forgotPassword = async (req, res, next) => {
 
   try {
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpires = Date.now() + 60 * 60 * 1000; 
+    const resetTokenExpires = Date.now() + 60 * 60 * 1000;
 
     const updateData = {
       resetPasswordToken: resetToken,
       resetPasswordExpires: resetTokenExpires,
-      lastCodeSentAt: new Date()
+      lastCodeSentAt: new Date(),
     };
 
-    const user = await User.findOneAndUpdate(
-      { email },
-      { $set: updateData },
-      { new: true } 
-    );
+    const user = await User.findOneAndUpdate({ email }, { $set: updateData }, { new: true });
 
     if (!user) {
       throw new AppError('No existe una cuenta con este email', 404);
@@ -217,8 +208,8 @@ exports.forgotPassword = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Correo enviado. Revisa tu bandeja de entrada.',
-      cooldown: 60, 
-      nextRequest: new Date(Date.now() + 60000).toISOString() 
+      cooldown: 60,
+      nextRequest: new Date(Date.now() + 60000).toISOString(),
     });
   } catch (error) {
     next(error);
@@ -235,7 +226,7 @@ exports.resetPassword = async (req, res, next) => {
 
     const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -249,15 +240,9 @@ exports.resetPassword = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Contraseña restablecida con éxito'
+      message: 'Contraseña restablecida con éxito',
     });
   } catch (error) {
     next(error);
   }
 };
-
-
-
-
-
-

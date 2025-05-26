@@ -19,9 +19,7 @@ describe('POST /auth/send-code', () => {
   it('should send a verification code to a new email', async () => {
     const email = 'test@example.com';
 
-    const response = await request(app)
-      .post('/api/auth/send-code')
-      .send({ email });
+    const response = await request(app).post('/api/auth/send-code').send({ email });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -34,16 +32,17 @@ describe('POST /auth/send-code', () => {
     const pendingUser = await PendingUser.findOne({ email });
     expect(pendingUser).toBeTruthy();
     expect(pendingUser.verificationCode).toBeDefined();
-    expect(emailService.sendVerificationCode).toHaveBeenCalledWith(email, pendingUser.verificationCode);
+    expect(emailService.sendVerificationCode).toHaveBeenCalledWith(
+      email,
+      pendingUser.verificationCode
+    );
   });
 
   it('should return an error if the email is already registered', async () => {
     const email = 'test@example.com';
     await User.create({ email, password: 'password123' });
 
-    const response = await request(app)
-      .post('/api/auth/send-code')
-      .send({ email });
+    const response = await request(app).post('/api/auth/send-code').send({ email });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
@@ -53,9 +52,7 @@ describe('POST /auth/send-code', () => {
   });
 
   it('should return an error if email is not provided', async () => {
-    const response = await request(app)
-      .post('/api/auth/send-code')
-      .send({});
+    const response = await request(app).post('/api/auth/send-code').send({});
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({

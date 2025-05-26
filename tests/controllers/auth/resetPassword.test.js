@@ -7,10 +7,8 @@ jest.mock('bcryptjs', () => ({
 }));
 
 describe('POST /auth/reset-password', () => {
-  let user;
-
   beforeEach(async () => {
-    user = await User.create({
+    await User.create({
       email: 'test@example.com',
       password: 'oldPassword123',
       resetPasswordToken: 'validToken123',
@@ -24,13 +22,11 @@ describe('POST /auth/reset-password', () => {
   });
 
   it('should return 400 if passwords do not match', async () => {
-    const response = await request(app)
-      .post('/api/auth/reset-password')
-      .send({
-        token: 'validToken123',
-        password: 'newPassword123',
-        confirmPassword: 'differentPassword123',
-      });
+    const response = await request(app).post('/api/auth/reset-password').send({
+      token: 'validToken123',
+      password: 'newPassword123',
+      confirmPassword: 'differentPassword123',
+    });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
@@ -40,13 +36,11 @@ describe('POST /auth/reset-password', () => {
   });
 
   it('should return 400 if the token is invalid or expired', async () => {
-    const response = await request(app)
-      .post('/api/auth/reset-password')
-      .send({
-        token: 'invalidToken123',
-        password: 'newPassword123',
-        confirmPassword: 'newPassword123',
-      });
+    const response = await request(app).post('/api/auth/reset-password').send({
+      token: 'invalidToken123',
+      password: 'newPassword123',
+      confirmPassword: 'newPassword123',
+    });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
@@ -56,13 +50,11 @@ describe('POST /auth/reset-password', () => {
   });
 
   it('should reset the password successfully', async () => {
-    const response = await request(app)
-      .post('/api/auth/reset-password')
-      .send({
-        token: 'validToken123',
-        password: 'newPassword123',
-        confirmPassword: 'newPassword123',
-      });
+    const response = await request(app).post('/api/auth/reset-password').send({
+      token: 'validToken123',
+      password: 'newPassword123',
+      confirmPassword: 'newPassword123',
+    });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({

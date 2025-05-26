@@ -7,77 +7,81 @@ const User = require('../../../src/models/User');
 
 jest.mock('../../../src/models/product');
 
-const mockToken = jwt.sign({ userId: '68101a7b665b17ab8ac6a8dc' }, process.env.JWT_SECRET || 'testSecret', {
+const mockToken = jwt.sign(
+  { userId: '68101a7b665b17ab8ac6a8dc' },
+  process.env.JWT_SECRET || 'testSecret',
+  {
     expiresIn: '1h',
-});
+  }
+);
 const mockCookie = cookie.serialize('token', mockToken, { httpOnly: true });
 
 beforeAll(async () => {
-    await User.create({
-        _id: '68101a7b665b17ab8ac6a8dc',
-        email: 'test@example.com',
-        password: 'password123',
-        isVerified: true
-    });
+  await User.create({
+    _id: '68101a7b665b17ab8ac6a8dc',
+    email: 'test@example.com',
+    password: 'password123',
+    isVerified: true,
+  });
 
-    await Product.create({
-        _id: '67b6b0657ffa1717270d6e54',
-        nombre: 'Test Product',
-        descripcion: 'A test product',
-        precio: 100,
-        marca: 'Test Brand',
-        stock: 10,
-        img: 'test.jpg',
-    });
+  await Product.create({
+    _id: '67b6b0657ffa1717270d6e54',
+    nombre: 'Test Product',
+    descripcion: 'A test product',
+    precio: 100,
+    marca: 'Test Brand',
+    stock: 10,
+    img: 'test.jpg',
+  });
 });
 
 afterAll(async () => {
-    await User.deleteMany();
-    await Product.deleteMany();
+  await User.deleteMany();
+  await Product.deleteMany();
 });
 
 describe('GET /api/products/:id', () => {
-    it('should return a product by ID with a 200 status', async () => {
-        const mockProduct = {
-            _id: '12345',
-            nombre: 'Test Product',
-            descripcion: 'A test product',
-            precio: 100,
-            marca: 'Test Brand',
-            stock: 10,
-            img: 'test.jpg',
-        };
+  it('should return a product by ID with a 200 status', async () => {
+    const mockProduct = {
+      _id: '12345',
+      nombre: 'Test Product',
+      descripcion: 'A test product',
+      precio: 100,
+      marca: 'Test Brand',
+      stock: 10,
+      img: 'test.jpg',
+    };
 
-        Product.findById.mockResolvedValue(mockProduct);
+    Product.findById.mockResolvedValue(mockProduct);
 
-        const response = await request(app)
-            .get(`/api/products/${mockProduct._id}`)
-            .set('Cookie', mockCookie)
-            .expect(200);
+    const response = await request(app)
+      .get(`/api/products/${mockProduct._id}`)
+      .set('Cookie', mockCookie)
+      .expect(200);
 
-        expect(response.body.status).toBe('OK');
-        expect(response.body.product).toEqual(mockProduct);
-    });
+    expect(response.body.status).toBe('OK');
+    expect(response.body.product).toEqual(mockProduct);
+  });
 
-    it('should return 404 if the product is not found', async () => {
-        Product.findById.mockResolvedValue(null);
+  it('should return 404 if the product is not found', async () => {
+    Product.findById.mockResolvedValue(null);
 
-        const response = await request(app)
-            .get('/api/products/invalidId')
-            .set('Cookie', mockCookie)
-            .expect(404);
+    const response = await request(app)
+      .get('/api/products/invalidId')
+      .set('Cookie', mockCookie)
+      .expect(404);
 
-        expect(response.body.error).toBe('Producto no encontrado');
-    });
+    expect(response.body.errors[0]).toBe('Producto no encontrado');
+  });
 
-    it('should return 500 if there is a server error', async () => {
-        Product.findById.mockRejectedValue(new Error('Error al obtener el producto'));
+  it('should return 500 if there is a server error', async () => {
+    Product.findById.mockRejectedValue(new Error('Error al obtener el producto'));
 
-        const response = await request(app)
-            .get('/api/products/12345')
-            .set('Cookie', mockCookie)
-            .expect(500);
+    const response = await request(app)
+      .get('/api/products/12345')
+      .set('Cookie', mockCookie)
+      .expect(500);
 
-        expect(response.body.error).toBe('Error al obtener el producto');
-    });
+    expect(response.body.errors[0]).toBe('Error al obtener el producto');
+  });
 });

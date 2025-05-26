@@ -5,12 +5,7 @@ const authValidator = require('../middlewares/validators/authValidator');
 const validatorMiddleware = require('../middlewares/validatorMiddleware');
 const loginLimiter = require('../middlewares/rateLimiter');
 
-router.post(
-  '/signup',
-  authValidator.signup,
-  validatorMiddleware,
-  authController.postSignUp
-);
+router.post('/signup', authValidator.signup, validatorMiddleware, authController.postSignUp);
 
 router.post(
   '/signin',
@@ -36,7 +31,7 @@ router.post(
 
 router.post(
   '/reset-password',
-  authValidator.resetPassword, 
+  authValidator.resetPassword,
   validatorMiddleware,
   authController.resetPassword
 );

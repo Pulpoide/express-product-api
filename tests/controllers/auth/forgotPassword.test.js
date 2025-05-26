@@ -19,13 +19,14 @@ describe('POST /auth/forgot-password', () => {
     const email = 'test@example.com';
     await User.create({ email, password: 'password123' });
 
-    const response = await request(app)
-      .post('/api/auth/forgot-password')
-      .send({ email });
+    const response = await request(app).post('/api/auth/forgot-password').send({ email });
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('success', true);
-    expect(response.body).toHaveProperty('message', 'Correo enviado. Revisa tu bandeja de entrada.');
+    expect(response.body).toHaveProperty(
+      'message',
+      'Correo enviado. Revisa tu bandeja de entrada.'
+    );
   });
 
   it('should return 404 if the user does not exist', async () => {

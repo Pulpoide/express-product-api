@@ -10,7 +10,7 @@ describe('POST /auth/signin', () => {
     const user = new User({
       email: 'testuser@example.com',
       password: hashedPassword,
-      isVerified: true
+      isVerified: true,
     });
     await user.save();
   });
@@ -20,12 +20,10 @@ describe('POST /auth/signin', () => {
   });
 
   it('should sign in a user successfully', async () => {
-    const response = await request(app)
-      .post('/api/auth/signin')
-      .send({
-        email: 'testuser@example.com',
-        password: 'Password123'
-      });
+    const response = await request(app).post('/api/auth/signin').send({
+      email: 'testuser@example.com',
+      password: 'Password123',
+    });
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('success', true);
@@ -39,12 +37,10 @@ describe('POST /auth/signin', () => {
   });
 
   it('should return an error for invalid credentials', async () => {
-    const response = await request(app)
-      .post('/api/auth/signin')
-      .send({
-        email: 'testuser@example.com',
-        password: 'WrongPassword'
-      });
+    const response = await request(app).post('/api/auth/signin').send({
+      email: 'testuser@example.com',
+      password: 'WrongPassword',
+    });
 
     expect(response.statusCode).toBe(401);
     expect(response.body).toHaveProperty('success', false);
@@ -53,12 +49,10 @@ describe('POST /auth/signin', () => {
   });
 
   it('should return an error for non-existent user', async () => {
-    const response = await request(app)
-      .post('/api/auth/signin')
-      .send({
-        email: 'nonexistent@example.com',
-        password: 'Password123'
-      });
+    const response = await request(app).post('/api/auth/signin').send({
+      email: 'nonexistent@example.com',
+      password: 'Password123',
+    });
 
     expect(response.statusCode).toBe(401);
     expect(response.body).toHaveProperty('success', false);
@@ -67,11 +61,9 @@ describe('POST /auth/signin', () => {
   });
 
   it('should return validation errors for missing fields', async () => {
-    const response = await request(app)
-      .post('/api/auth/signin')
-      .send({
-        email: ''
-      });
+    const response = await request(app).post('/api/auth/signin').send({
+      email: '',
+    });
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('success', false);
@@ -85,12 +77,10 @@ describe('POST /auth/signin', () => {
       throw new Error('Unexpected error');
     });
 
-    const response = await request(app)
-      .post('/api/auth/signin')
-      .send({
-        email: 'testuser@example.com',
-        password: 'Password123'
-      });
+    const response = await request(app).post('/api/auth/signin').send({
+      email: 'testuser@example.com',
+      password: 'Password123',
+    });
 
     expect(response.statusCode).toBe(500);
     expect(response.body).toHaveProperty('success', false);

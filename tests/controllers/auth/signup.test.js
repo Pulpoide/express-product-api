@@ -17,14 +17,12 @@ describe('POST /auth/signup', () => {
     });
     await pendingUser.save();
 
-    const response = await request(app)
-      .post('/api/auth/signup')
-      .send({
-        email: 'test@example.com',
-        password: 'Password123',
-        confirmPassword: 'Password123',
-        verificationCode: '123456',
-      });
+    const response = await request(app).post('/api/auth/signup').send({
+      email: 'test@example.com',
+      password: 'Password123',
+      confirmPassword: 'Password123',
+      verificationCode: '123456',
+    });
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('success', true);
@@ -48,19 +46,16 @@ describe('POST /auth/signup', () => {
     });
     await pendingUser.save();
 
-    const response = await request(app)
-      .post('/api/auth/signup')
-      .send({
-        email: 'invalid@example.com',
-        password: 'Password123',
-        confirmPassword: 'Password123',
-        verificationCode: 'wrongcode',
-      });
+    const response = await request(app).post('/api/auth/signup').send({
+      email: 'invalid@example.com',
+      password: 'Password123',
+      confirmPassword: 'Password123',
+      verificationCode: 'wrongCode',
+    });
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('success', false);
-    expect(response.body.errors).toContain('El código debe tener 6 dígitos');
-    expect(response.body.errors).toContain('El código debe ser numérico');
+    expect(response.body.errors).toContain('El código debe ser numérico y de 6 dígitos');
   });
 
   it('should return an error if passwords do not match', async () => {
@@ -71,14 +66,12 @@ describe('POST /auth/signup', () => {
     });
     await pendingUser.save();
 
-    const response = await request(app)
-      .post('/api/auth/signup')
-      .send({
-        email: 'mismatch@example.com',
-        password: 'Password123',
-        confirmPassword: 'Password456',
-        verificationCode: '123456',
-      });
+    const response = await request(app).post('/api/auth/signup').send({
+      email: 'mismatch@example.com',
+      password: 'Password123',
+      confirmPassword: 'Password456',
+      verificationCode: '123456',
+    });
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('success', false);
@@ -100,14 +93,12 @@ describe('POST /auth/signup', () => {
     });
     await pendingUser.save();
 
-    const response = await request(app)
-      .post('/api/auth/signup')
-      .send({
-        email: 'exists@example.com',
-        password: 'Password123',
-        confirmPassword: 'Password123',
-        verificationCode: '123456',
-      });
+    const response = await request(app).post('/api/auth/signup').send({
+      email: 'exists@example.com',
+      password: 'Password123',
+      confirmPassword: 'Password123',
+      verificationCode: '123456',
+    });
 
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty('success', false);

@@ -20,13 +20,14 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
     const response = await fetch('/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, password, confirmPassword })
+      body: JSON.stringify({ token, password, confirmPassword }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      successElement.textContent = 'Contraseña restablecida con éxito. Redirigiendo al inicio de sesión...';
+      successElement.textContent =
+        'Contraseña restablecida con éxito. Redirigiendo al inicio de sesión...';
       successElement.style.display = 'block';
 
       setTimeout(() => {

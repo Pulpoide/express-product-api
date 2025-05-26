@@ -14,7 +14,7 @@ document.getElementById('sendCode').addEventListener('click', async () => {
     const response = await fetch('/api/auth/send-code', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email }),
     });
 
     const data = await response.json();
@@ -47,7 +47,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
   const verificationCode = document.getElementById('verificationCode').value;
 
   if (password !== confirmPassword) {
-    errorElement.textContent = "Las contraseñas no coinciden";
+    errorElement.textContent = 'Las contraseñas no coinciden';
     errorElement.style.display = 'block';
   }
 
@@ -59,8 +59,8 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
         email,
         password,
         confirmPassword,
-        verificationCode
-      })
+        verificationCode,
+      }),
     });
 
     const data = await response.json();
@@ -68,7 +68,6 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     if (!response.ok) throw new Error(data.errors || data.message || 'Error desconocido');
 
     window.location.replace('/products');
-
   } catch (error) {
     errorElement.textContent = error.message;
     errorElement.style.display = 'block';

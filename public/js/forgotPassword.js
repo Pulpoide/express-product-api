@@ -16,13 +16,14 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
     const response = await fetch('/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      successElement.textContent = 'Código enviado, revisa tu correo electrónico para restablecer tu contraseña';
+      successElement.textContent =
+        'Código enviado, revisa tu correo electrónico para restablecer tu contraseña';
       successElement.style.display = 'block';
     } else {
       errorElement.textContent = data.errors?.[0] || 'Error al procesar la solicitud.';

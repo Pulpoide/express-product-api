@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const viewsController = require('../controllers/viewsController');
 const authController = require('../controllers/authController');
-const authenticateToken = require('../middlewares/authMiddleware')
+const authenticateToken = require('../middlewares/authMiddleware');
 
-router.get('/', (req, res) => res.render("index"));
+router.get('/', (req, res) => res.render('index'));
 
-router.get('/signin', authController.getSignIn)
-router.get('/signup', authController.getSignUp)
+router.get('/signin', authController.getSignIn);
+router.get('/signup', authController.getSignUp);
 
 router.get('/product/create', authenticateToken, viewsController.crearProducto);
 router.get('/product/:id', authenticateToken, viewsController.mostrarProducto);
@@ -22,4 +22,3 @@ router.get('/reset-password/:token', (req, res) => {
 });
 
 module.exports = router;
-
