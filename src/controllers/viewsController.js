@@ -57,7 +57,7 @@ const editarProducto = async (req, res) => {
       },
     });
     const data = response.data;
-    res.render('edit', { product: data.product });
+    res.render('edit', { product: data.product, user: req.user });
   } catch (error) {
     console.error('⚠️ Error al editar el producto:', error);
     return res.status(500).json({ success: false, errors: ['Error interno'] });
