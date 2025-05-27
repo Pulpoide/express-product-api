@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const id = formEditar.dataset.code;
       let imgFilename = formEditar.elements['img'].value.replace(/.*[\/\\]/, '');
+      if (!imgFilename) {
+        imgFilename = formEditar.elements['imgActual'].value;
+      }
 
       try {
         if (inputImagen.files.length > 0) {
@@ -19,10 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
             body: formData,
           });
 
-          if (!resImg.ok) throw new Error('Error al subir imagen');
-
-          const imgData = await resImg.json();
-          imgFilename = imgData.filename;
+          let imgData;
+          if (!resImg.ok) {
+            let errorMsg = 'Image upload failed';
+            let errorText = await resImg.text();
+            try {
+              const errorData = JSON.parse(errorText);
+              if (errorData?.errors?.[0]) {
+                errorMsg = errorData.errors[0];
+              } else if (errorData?.message) {
+                errorMsg = errorData.message;
+              } else if (errorData?.mensaje) {
+                errorMsg = errorData.mensaje;
+              }
+            } catch (e) {
+              if (errorText) errorMsg = errorText;
+            }
+            alert(errorMsg);
+            return;
+          } else {
+            imgData = await resImg.json();
+            imgFilename = imgData.filename;
+          }
         }
 
         const response = await fetch(`/api/products/${id}`, {
