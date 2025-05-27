@@ -1,4 +1,4 @@
-<%- include("template/header", {tituloWeb: 'Editar producto' }) %>
+<%- include("template/header", {tituloWeb: 'Editar producto', user: typeof user !== 'undefined' ? user : null }) %>
 
     <body>
         <br>
@@ -17,6 +17,7 @@
                     value="<%= product.stock %>" id="stockInput">
                 <input type="file" placeholder="Imagen" class="form-control my-2" name="img" value="<%= product.img %>"
                     id="imgInput">
+                <input type="hidden" name="imgActual" id="imgActual" value="<%= product.img %>">
 
                 <button class="btn btn-success btn-block w-100" type="submit">Guardar cambios</button>
             </form>
