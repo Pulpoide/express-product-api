@@ -331,6 +331,13 @@
                       "success": false,
                       "errors": ["Debe proporcionar un email válido"]
                     }
+                  },
+                  "EspereParaReenviar": {
+                    "summary": "Espere para reenviar",
+                    "value": {
+                      "success": false,
+                      "errors": ["Espere xx segundos para reenviar el código"]
+                    }
                   }
                 }
               }
