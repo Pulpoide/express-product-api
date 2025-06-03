@@ -13,9 +13,12 @@ if (nodeEnv === 'test') {
 } else if (nodeEnv === 'production') {
   mongoURI = process.env.MONGO_URI;
 } else {
-  throw new Error(
-    `❌ NODE_ENV no está configurado correctamente. Valor recibido: "${process.env.NODE_ENV}"`
-  );
+  console.warn(`⚠️ NODE_ENV no está configurado correctamente. Valor recibido: "${process.env.NODE_ENV}"`);
+  mongoURI = process.env.MONGO_URI_DEV || 'mongodb+srv://defaultUser:defaultPass@cluster0.mongodb.net/default_db';
+}
+
+if (!mongoURI) {
+  throw new Error('❌ No se pudo determinar la URI de MongoDB. Verifica las variables de entorno.');
 }
 
 mongoose
