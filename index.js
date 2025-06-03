@@ -35,7 +35,7 @@ app.use(
       objectSrc: ["'none'"],
       connectSrc: ["'self'"],
       frameSrc: ["'none'"],
-      mediaSrc: ["'self'"],
+      mediaSrc: ["'self'", 'http://localhost:8888'],
     },
   })
 );
