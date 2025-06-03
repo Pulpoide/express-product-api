@@ -10,6 +10,7 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <title>API Productos | <%= tituloWeb %>
   </title>
+  <meta name="base-url" content="<%= baseUrl %>">
 </head>
 
 <body>
@@ -17,9 +18,9 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="http://localhost:8888/" class="nav-link px-2 text-secondary text-white">HOME</a></li>
-          <li><a href="http://localhost:8888/products" class="nav-link px-2 text-white">PRODUCTOS</a></li>
-          <li><a href="http://localhost:8888/api-docs" class="nav-link px-2 text-white">DOCUMENTACIÓN</a></li>
+          <li><a href="/" class="nav-link px-2 text-secondary text-white">HOME</a></li>
+          <li><a href="/products" class="nav-link px-2 text-white">PRODUCTOS</a></li>
+          <li><a href="/api-docs" class="nav-link px-2 text-white">DOCUMENTACIÓN</a></li>
         </ul>
         <div class="text-end d-flex align-items-center">
           <% if (typeof user !== 'undefined' && user) { %>
@@ -27,8 +28,8 @@
               <button type="button" class="btn btn-outline-danger me-2" id="logoutBtn">Logout</button>
             </form>
           <% } else { %>
-            <a href="http://localhost:8888/signin" class="btn btn-outline-success me-2 text-white">Sign in</a>
-            <a href="http://localhost:8888/signup" class="btn btn-success">Sign up</a>
+            <a href="/signin" class="btn btn-outline-success me-2 text-white">Sign in</a>
+            <a href="/signup" class="btn btn-success">Sign up</a>
           <% } %>
         </div>
       </div>
