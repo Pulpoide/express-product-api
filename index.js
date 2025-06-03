@@ -89,6 +89,8 @@ app.use((req, res, next) => {
 });
 app.use(require('./src/middlewares/errorHandler'));
 
+app.locals.baseUrl = process.env.BASE_URL || 'http://localhost:8888';
+
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`✅ Server escuchando el puerto ${PORT} -> http://localhost:${PORT}/`);
