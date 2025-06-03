@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const formCrear = document.querySelector('#formCrear');
   const input = document.querySelector('input[type="file"]');
+  const baseUrl = document.querySelector('meta[name="base-url"]').content || 'http://localhost:8888';
 
   formCrear.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log({ nombre, descripcion, precio, marca, stock, img });
 
     try {
-      await fetch(`http://localhost:8888/api/products`, {
+      await fetch(`${baseUrl}/api/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, descripcion, precio, marca, stock, img }),
@@ -25,13 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append('file', input.files[0]);
 
-        await fetch(`http://localhost:8888/api/upload`, {
+        await fetch(`${baseUrl}/api/upload`, {
           method: 'POST',
           body: formData,
         });
       }
 
-      window.location.href = `/products`;
+      window.location.href = `${baseUrl}/products`;
     } catch (error) {
       console.error('Error al crear el producto o subir la imagen:', error);
     }

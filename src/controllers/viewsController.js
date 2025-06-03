@@ -1,8 +1,9 @@
 const axios = require('axios');
 
 const mostrarProductos = async (req, res) => {
+  const baseUrl = req.app.locals.baseUrl;
   try {
-    const response = await axios.get('http://localhost:8888/api/products/', {
+    const response = await axios.get(`${baseUrl}/api/products/`, {
       withCredentials: true,
       headers: { Cookie: req.headers.cookie },
     });
@@ -18,9 +19,10 @@ const mostrarProductos = async (req, res) => {
 };
 
 const mostrarProducto = async (req, res) => {
+  const baseUrl = req.app.locals.baseUrl;
   try {
     const id = req.params.id;
-    const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+    const response = await axios.get(`${baseUrl}/api/products/${id}`, {
       headers: { Cookie: req.headers.cookie },
     });
     res.render('detail', {
@@ -47,11 +49,12 @@ const crearProducto = async (req, res) => {
 };
 
 const editarProducto = async (req, res) => {
+  const baseUrl = req.app.locals.baseUrl;
   let id = req.params.id;
   try {
     const cookie = req.headers.cookie;
 
-    const response = await axios.get(`http://localhost:8888/api/products/${id}`, {
+    const response = await axios.get(`${baseUrl}/api/products/${id}`, {
       headers: {
         Cookie: cookie,
       },
