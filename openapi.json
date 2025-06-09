@@ -3,7 +3,7 @@
   "info": {
     "title": "Product Manager App",
     "version": "1.0.0",
-    "description": "API REST para gestionar productos en el inventario."
+    "description": "Full-stack Product Manager App - CRUD de productos con Express, MongoDB, JWT, Docker y Swagger"
   },
   "servers": [
     {
