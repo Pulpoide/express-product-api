@@ -12,15 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
         products.products.forEach((product) => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <th scope="row" data-label="#">${product._id}</th>
+            <th scope="row" data-label="ID">${product._id}</th>
             <td data-label="Nombre">${product.nombre}</td>
             <td data-label="Descripción">${product.descripcion}</td>
             <td data-label="Precio">$${product.precio}</td>
             <td data-label="Marca">${product.marca}</td>
             <td data-label="Stock">${product.stock}</td>
-            <td data-label="Visualizar">
+            <td data-label="Detalle">
                 <a type="button" class="btn btn-warning" href="/product/${product._id}" role="button">
-                Info
+                Ver
                 </a>
             </td>
           `;
