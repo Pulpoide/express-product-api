@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8888/api",
-      "description": "Servidor local"
-    },
-    {
       "url": "https://aoi2-w2.onrender.com/api",
       "description": "Servidor desplegado"
+    },
+    {
+      "url": "http://localhost:8888/api",
+      "description": "Servidor local"
     }
   ],
   "paths": {
