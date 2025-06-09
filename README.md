@@ -1,4 +1,4 @@
-# API Backend de Productos
+# Product Manager App
 
 Se trata de una API RESTful construida con **Express.js** y **MongoDB**, diseñada para manejar un CRUD completo de productos. Incluye autenticación JWT, carga de archivos, documentación Swagger, pruebas automatizadas y vistas con EJS.
 
