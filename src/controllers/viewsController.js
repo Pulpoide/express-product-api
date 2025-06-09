@@ -41,7 +41,7 @@ const mostrarProducto = async (req, res) => {
 
 const crearProducto = async (req, res) => {
   try {
-    res.render('create');
+    res.render('create', { user: req.user });
   } catch (error) {
     console.error('⚠️ Error al crear el producto:', error);
     return res.status(500).json({ success: false, errors: ['Error interno'] });
