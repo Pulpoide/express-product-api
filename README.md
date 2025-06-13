@@ -121,7 +121,7 @@ npm test
 
 ## Documentación
 
-Accede a la documentación interactiva de la API [aquí.](https://verbal-bee-joacolivero-8438cba1.koyeb.app/api-docs/)
+Accede a la documentación interactiva de la API [aquí.](https://aoi2-w2.onrender.com/api-docs/)
 
 
 ## Autor
