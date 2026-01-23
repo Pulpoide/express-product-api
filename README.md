@@ -1,6 +1,6 @@
 # Product Manager App — RESTful API & Product Management System
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) ![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Runtime-339933?logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-Framework-000000?logo=express&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb&logoColor=white) ![Jest](https://img.shields.io/badge/Jest-Testing-C21325?logo=jest&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
 
 Welcome to the repository for **Product Manager App**, a robust and scalable RESTful API designed for comprehensive product lifecycle management. 
 
@@ -18,13 +18,13 @@ This application combines a high-performance **Backend architecture** with a sec
 
 ## Tech Stack
 
-- **Backend & Core:** Node.js & Express.js.
-- **Database:** MongoDB Atlas (Cloud) & Mongoose (ODM).
-- **Security:** JSON Web Tokens (JWT), Bcrypt.js, Helmet, and Express-Rate-Limit.
-- **Quality & Testing:** Jest, Supertest, and MongoDB Memory Server for isolated database testing.
-- **Frontend & UI:** EJS (Embedded JavaScript templates) & Bootstrap 5.
-- **Documentation:** Swagger (OpenAPI 3.0).
-- **DevOps:** Docker for containerization.
+- **Backend & Core:** Node.js and Express.js for a fast and minimalist server architecture.
+- **Database:** MongoDB Atlas with Mongoose (ODM) for flexible and scalable document-based storage.
+- **Security & Auth:** Implementation of JWT (JSON Web Tokens), Bcrypt.js for password hashing, and Helmet for HTTP header protection.
+- **Quality & Testing:** Unit and integration testing using Jest and Supertest, ensuring reliable API performance.
+- **File Management:** Integrated file upload system utilizing Multer for managing product assets.
+- **Documentation:** Interactive API explorer built with Swagger (OpenAPI 3.0).
+- **DevOps:** Containerization with Docker for consistent development and deployment environments.
 
 ## Project Structure
 
