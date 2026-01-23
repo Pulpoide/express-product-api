@@ -1,9 +1,10 @@
-# Product Manager App
+# Product Manager App — RESTful API & Product Management System
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white) ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white) ![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 
 Welcome to the repository for **Product Manager App**, a robust and scalable RESTful API designed for comprehensive product lifecycle management. 
-This application combines a powerful backend built with Express.js and MongoDB with a dynamic frontend rendered via EJS, ensuring a secure and efficient user experience.
+
+This application combines a high-performance **Backend architecture** with a secure **Authentication system**, providing a complete solution for managing product catalogs, secure user access, and automated data validation.
 
 ## Features
 
