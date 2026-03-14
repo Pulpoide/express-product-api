@@ -145,7 +145,9 @@ Once the server is running, you can explore and interact with the API through Sw
 
 ## Author
 
-**Joaquin D. Olivero** Full Stack Developer | Backend Specialist
+**Joaquin D. Olivero**
+
+Software Engineer | AI Engineer
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/JoaquinOlivero)
 
